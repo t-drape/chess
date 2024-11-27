@@ -32,7 +32,16 @@ describe Pawn do
   end
   describe '#available_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a pawn is on its starting block' do
-      subject(:black_pawn) { described_class.new('black', [1, 3], []) }
+      subject(:black_pawn) do
+        described_class.new('black', [1, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
       it 'returns single and double openings for black pawn' do
         expected_output = [[2, 3], [3, 3]]
         expect(black_pawn.available_moves).to eql(expected_output)
@@ -104,8 +113,17 @@ describe Pawn do
 
       subject(:capturing_black_pawn) { described_class.new('black', [3, 3], []) }
       it 'returns the diagonal moves for a black pawn' do
+        capturing_black_pawn.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, Pawn.new('white', [0, 0], []), nil, Pawn.new('white', [0, 0], []),
+                                       nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                                      [nil, nil, nil, nil, nil, nil, nil, nil]]
         included_output = [[4, 2], [4, 4]]
-        expect(capturing_white_pawn.available_moves).to include(included_output[0]).and include(included_output[1])
+        expect(capturing_black_pawn.available_moves).to include(included_output[0]).and include(included_output[1])
       end
     end
   end
