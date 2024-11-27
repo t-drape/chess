@@ -26,8 +26,11 @@ class Pawn
     moves = moves.map(&:-@) if @color == 'white'
     end_moves = []
     moves.each do |vert_add|
-      end_moves << [@position[0] + vert_add, @position[1]]
+      end_moves << [@position[0] + vert_add, @position[1]] if @board[@position[0] + vert_add][@position[1]].nil?
     end
+    end_moves = [] if on_opening? && !@board[@position[0] - 1][@position[1]].nil? && @color == 'white'
+    end_moves = [] if on_opening? && !@board[@position[0] + 1][@position[1]].nil? && @color == 'black'
+
     # Capturing moves
     if @color == 'white'
       captures = [[@position[0] - 1, @position[1] - 1], [@position[0] - 1, @position[1] + 1]]

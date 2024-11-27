@@ -126,5 +126,78 @@ describe Pawn do
         expect(capturing_black_pawn.available_moves).to include(included_output[0]).and include(included_output[1])
       end
     end
+
+    context 'when a pawn is blocked' do
+      subject(:blocked_black_pawn) do
+        described_class.new('black', [3, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
+      it 'does not return any moves for a non-opening blocked black pawn' do
+        expect(blocked_black_pawn.available_moves).to eql([])
+      end
+
+      subject(:blocked_white_pawn) do
+        described_class.new('white', [5, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
+      it 'does not return any moves for a non-opening blocked white pawn' do
+        expect(blocked_white_pawn.available_moves).to eql([])
+      end
+
+      subject(:blocked_double_opener) do
+        described_class.new('white', [6, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
+      it 'returns only single opening when double is blocked' do
+        single_opening = [[5, 3]]
+        expect(blocked_double_opener.available_moves).to eql(single_opening)
+      end
+
+      subject(:no_opening_white) do
+        described_class.new('white', [6, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
+      it 'returns no moves when single opening is blocked but double is open' do
+        expect(no_opening_white.available_moves).to eql([])
+      end
+
+      subject(:no_opening_black) do
+        described_class.new('black', [1, 1], [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+      end
+      it 'returns no moves when single opening is blocked but double is open' do
+        expect(no_opening_black.available_moves).to eql([])
+      end
+    end
   end
 end
