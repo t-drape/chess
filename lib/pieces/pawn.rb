@@ -2,9 +2,12 @@
 
 # A class to model a Pawn in chess
 class Pawn
-  def initialize(color, pos)
+  attr_accessor :color, :board
+
+  def initialize(color, pos, board)
     @color = color
     @position = pos
+    @board = board
   end
 
   def on_opening?
@@ -24,6 +27,20 @@ class Pawn
     end_moves = []
     moves.each do |vert_add|
       end_moves << [@position[0] + vert_add, @position[1]]
+    end
+    # Capturing moves
+    if @color == 'white'
+      captures = [[@position[0] - 1, @position[1] - 1], [@position[0] - 1, @position[1] + 1]]
+      captures.each do |capture_index|
+        captured = @board[capture_index[0]][capture_index[1]]
+        end_moves << capture_index unless captured.nil? || captured.color == @color
+      end
+    else
+      captures = [[@position[0] + 1, @position[1] - 1], [@position[0] + 1, @position[1] + 1]]
+      captures.each do |capture_index|
+        captured = @board[capture_index[0]][capture_index[1]]
+        end_moves << capture_index unless captured.nil? || captured.color == @color
+      end
     end
     end_moves
   end
