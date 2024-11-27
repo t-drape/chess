@@ -5,25 +5,25 @@ require_relative('./../lib/pieces/pawn')
 describe Pawn do
   describe 'on_opening?' do
     context 'when a pawn is on opening square' do
-      subject(:opener) { described_class.new('black', [1, 3], []) }
+      subject(:opener) { described_class.new('black', [1, 3], [], nil) }
 
       it 'returns true for black pawn' do
         expect(opener.on_opening?).to eql(true)
       end
 
-      subject(:opener) { described_class.new('white', [6, 3], []) }
+      subject(:opener) { described_class.new('white', [6, 3], [], nil) }
       it 'returns true for white pawn' do
         expect(opener.on_opening?).to eql(true)
       end
     end
     context 'When a pawn is not on the opening square' do
-      subject(:not_opener) { described_class.new('black', [4, 3]) }
+      subject(:not_opener) { described_class.new('black', [4, 3], [], nil) }
 
       it 'returns false for black pawn' do
         expect(not_opener.on_opening?).to eql(false)
       end
 
-      subject(:not_opener) { described_class.new('white', [4, 3], []) }
+      subject(:not_opener) { described_class.new('white', [4, 3], [], nil) }
 
       it 'returns false for white pawn' do
         expect(not_opener.on_opening?).to eql(false)
@@ -40,7 +40,7 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns single and double openings for black pawn' do
         expected_output = [[2, 3], [3, 3]]
@@ -55,7 +55,7 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns single and double openings for white pawn' do
         expected_output = [[5, 3], [4, 3]]
@@ -72,7 +72,7 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns single move for black pawn' do
         expected_output = [[6, 4]]
@@ -87,7 +87,7 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns single move for white pawn' do
         expected_output = [[4, 4]]
@@ -96,12 +96,12 @@ describe Pawn do
     end
 
     context 'when a pawn can capture' do
-      subject(:capturing_white_pawn) { described_class.new('white', [4, 3], []) }
+      subject(:capturing_white_pawn) { described_class.new('white', [4, 3], [], nil) }
       it 'returns the diagonal moves for a white pawn' do
         capturing_white_pawn.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
-                                      [nil, nil, Pawn.new('black', [0, 0], []), nil, Pawn.new('black', [0, 0], []),
+                                      [nil, nil, Pawn.new('black', [0, 0], [], nil), nil, Pawn.new('black', [0, 0], [], nil),
                                        nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -111,13 +111,13 @@ describe Pawn do
         expect(capturing_white_pawn.available_moves).to include(included_output[0]).and include(included_output[1])
       end
 
-      subject(:capturing_black_pawn) { described_class.new('black', [3, 3], []) }
+      subject(:capturing_black_pawn) { described_class.new('black', [3, 3], [], nil) }
       it 'returns the diagonal moves for a black pawn' do
         capturing_black_pawn.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
-                                      [nil, nil, Pawn.new('white', [0, 0], []), nil, Pawn.new('white', [0, 0], []),
+                                      [nil, nil, Pawn.new('white', [0, 0], [], nil), nil, Pawn.new('white', [0, 0], [], nil),
                                        nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
                                       [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -133,10 +133,10 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'does not return any moves for a non-opening blocked black pawn' do
         expect(blocked_black_pawn.available_moves).to eql([])
@@ -147,10 +147,10 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'does not return any moves for a non-opening blocked white pawn' do
         expect(blocked_white_pawn.available_moves).to eql([])
@@ -161,10 +161,10 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns only single opening when double is blocked' do
         single_opening = [[5, 3]]
@@ -177,9 +177,9 @@ describe Pawn do
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil],
+                                              [nil, nil, nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns no moves when single opening is blocked but double is open' do
         expect(no_opening_white.available_moves).to eql([])
@@ -188,15 +188,81 @@ describe Pawn do
       subject(:no_opening_black) do
         described_class.new('black', [1, 1], [[nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, Pawn.new('white', [4, 3], []), nil, nil, nil, nil, nil, nil],
+                                              [nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, nil, nil, nil, nil]], nil)
       end
       it 'returns no moves when single opening is blocked but double is open' do
         expect(no_opening_black.available_moves).to eql([])
+      end
+    end
+
+    context 'when the En Passant rule is in effect' do
+      subject(:captured) { described_class.new('white', [6, 5], [], nil) }
+      subject(:en_passant_black) do
+        described_class.new('black', [4, 4], [], { piece: captured, on_start: true, end: [4, 5], type: 'pawn' })
+      end
+      it 'returns the diagonal capture move for a black pawn' do
+        en_passant_black.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, Pawn.new('white', [4, 5], [], nil), nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil]]
+        expect(en_passant_black.available_moves).to include([5, 5])
+      end
+
+      subject(:en_passant_black_other) do
+        described_class.new('black', [4, 4], [], { piece: captured, on_start: true, end: [4, 3], type: 'pawn' })
+      end
+      it 'returns the other diagonal capture move for a black pawn' do
+        en_passant_black_other.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, Pawn.new('white', [4, 3], [], nil), nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil]]
+        expect(en_passant_black_other.available_moves).to include([5, 3])
+      end
+
+      subject(:black_capture) { described_class.new('black', [6, 5], [], nil) }
+      subject(:en_passant_white) do
+        described_class.new('white', [3, 1], [], { piece: black_capture, on_start: true, end: [3, 2], type: 'pawn' })
+      end
+
+      it 'returns the diagonal capture move for a white pawn' do
+        en_passant_white.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, Pawn.new('black', [4, 5], [], nil), nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil],
+                                  [nil, nil, nil, nil, nil, nil, nil, nil]]
+        expect(en_passant_white.available_moves).to include([2, 2])
+      end
+
+      subject(:en_passant_white_other) do
+        described_class.new('white', [3, 1], [], { piece: black_capture, on_start: true, end: [3, 0], type: 'pawn' })
+      end
+
+      it 'returns the other diagonal capture move for a white pawn' do
+        en_passant_white_other.board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [Pawn.new('black', [3, 0], [], nil), nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil],
+                                        [nil, nil, nil, nil, nil, nil, nil, nil]]
+        expect(en_passant_white_other.available_moves).to include([2, 0])
       end
     end
   end

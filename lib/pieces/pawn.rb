@@ -4,10 +4,11 @@
 class Pawn
   attr_accessor :color, :board
 
-  def initialize(color, pos, board)
+  def initialize(color, pos, board, last_move)
     @color = color
     @position = pos
     @board = board
+    @last_move = last_move
   end
 
   def on_opening?
@@ -43,6 +44,26 @@ class Pawn
       captures.each do |capture_index|
         captured = @board[capture_index[0]][capture_index[1]]
         end_moves << capture_index unless captured.nil? || captured.color == @color
+      end
+    end
+
+    if !@last_move.nil? && @last_move[:piece].color != @color && @last_move[:type] == 'pawn'
+      if @board[@position[0]][@position[1] + 1] == @board[@last_move[:end][0]][@last_move[:end][1]]
+        end_moves << (if @color == 'black'
+                        [@last_move[:end][0] + 1,
+                         @last_move[:end][1]]
+                      else
+                        [@last_move[:end][0] - 1,
+                         @last_move[:end][1]]
+                      end)
+      elsif @board[@position[0]][@position[1] - 1] == @board[@last_move[:end][0]][@last_move[:end][1]]
+        end_moves << (if @color == 'black'
+                        [@last_move[:end][0] + 1,
+                         @last_move[:end][1]]
+                      else
+                        [@last_move[:end][0] - 1,
+                         @last_move[:end][1]]
+                      end)
       end
     end
     end_moves
