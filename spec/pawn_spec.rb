@@ -31,7 +31,7 @@ describe Pawn do
     end
   end
   describe '#available_moves' do # rubocop:disable Metrics/BlockLength
-    context 'when a pawn is on its starting block' do
+    context 'when a pawn is on its starting block' do # rubocop:disable Metrics/BlockLength
       subject(:black_pawn) do
         described_class.new('black', [1, 3], [[nil, nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil, nil],
