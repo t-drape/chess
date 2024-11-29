@@ -146,4 +146,56 @@ class WhitePawn
     @board = board
     @last_move = last_move
   end
+
+  def opening_moves
+    moves = []
+    [1, 2].each do |vert_add|
+      if @board[@pos[0] - vert_add][@pos[1]].nil?
+        moves << [@pos[0] - vert_add, @pos[1]]
+      elsif vert_add == 1
+        return nil
+      end
+    end
+    moves
+  end
+
+  def capture_moves
+    # Diagonals to the left, row + 1, column + 1
+    moves = []
+    y = @pos[0] - 1
+    x = @pos[1] + 1
+    moves << [y, x] if !@board[y][x].nil? && @board[y][x].color != @color
+
+    # Diagonals to the right, row + 1, column - 1
+    x = @pos[1] - 1
+    moves << [y, x] if !@board[y][x].nil? && @board[y][x].color != @color
+    moves
+  end
+
+  def non_opening_moves
+    [@pos[0] - 1, @pos[1]] if @board[@pos[0] - 1][@pos[1]].nil?
+  end
+
+  def en_passant_left
+    return unless !@board[@pos[0]][@pos[1] + 1].nil? && @board[@pos[0]][@pos[1] + 1].color != @color
+    return unless @last_move[:piece] == @board[@pos[0]][@pos[1] + 1]
+
+    [@pos[0] - 1, @pos[1] + 1] if @last_move[:from_start]
+  end
+
+  def en_passant_right
+    return unless !@board[@pos[0]][@pos[1] - 1].nil? && @board[@pos[0]][@pos[1] - 1].color != @color
+    return unless @last_move[:piece] == @board[@pos[0]][@pos[1] - 1]
+
+    [@pos[0] - 1, @pos[1] - 1] if @last_move[:from_start]
+  end
+
+  def en_passant
+    moves = []
+    left = en_passant_left
+    right = en_passant_right
+    moves << left unless left.nil?
+    moves << right unless right.nil?
+    moves
+  end
 end

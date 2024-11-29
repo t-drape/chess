@@ -208,7 +208,7 @@ describe WhitePawn do
       end
 
       it 'returns nil if the first move is blocked' do
-        starting_square.board[4][3] = 12
+        starting_square.board[5][3] = 12
         expected_output = nil
         expect(starting_square.opening_moves).to eql(expected_output)
       end
@@ -245,7 +245,7 @@ describe WhitePawn do
     end
   end
 
-  describe 'non_opener_moves' do
+  describe 'non_opening_moves' do
     context 'when a pawn is not on an opening block' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -259,14 +259,14 @@ describe WhitePawn do
       subject(:single_mover) { described_class.new([4, 3], board, nil) }
       it 'returns only the move in front of it' do
         single_mover.board[4][3] = single_mover
-        expected_output = [3][3]
-        expect(single_mover.non_opener_moves).to eql(expected_output)
+        expected_output = [3, 3]
+        expect(single_mover.non_opening_moves).to eql(expected_output)
       end
 
       it 'returns nil of single space is blocked' do
         single_mover.board[3][3] = 12
         expected_output = nil
-        expect(single_mover.non_opener_moves).to eql(expected_output)
+        expect(single_mover.non_opening_moves).to eql(expected_output)
       end
     end
   end
