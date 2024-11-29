@@ -22,6 +22,7 @@ class Pawn
   end
 
   def available_moves
+    # Regular Moves
     moves = [1]
     moves << 2 if on_opening?
     moves = moves.map(&:-@) if @color == 'white'
@@ -32,7 +33,7 @@ class Pawn
     end_moves = [] if on_opening? && !@board[@position[0] - 1][@position[1]].nil? && @color == 'white'
     end_moves = [] if on_opening? && !@board[@position[0] + 1][@position[1]].nil? && @color == 'black'
 
-    # Capturing moves
+    # Capturing Moves
     if @color == 'white'
       captures = [[@position[0] - 1, @position[1] - 1], [@position[0] - 1, @position[1] + 1]]
       captures.each do |capture_index|
@@ -47,6 +48,7 @@ class Pawn
       end
     end
 
+    # En Passant Moves
     if !@last_move.nil? && @last_move[:piece].color != @color && @last_move[:type] == 'pawn'
       if @board[@position[0]][@position[1] + 1] == @board[@last_move[:end][0]][@last_move[:end][1]]
         end_moves << (if @color == 'black'
@@ -68,4 +70,16 @@ class Pawn
     end
     end_moves
   end
+end
+
+class BlackPawn
+  attr_accessor :color
+
+  def initialize(pos)
+    @color = 'black'
+    @pos = pos
+  end
+end
+
+class WhitePawn
 end
