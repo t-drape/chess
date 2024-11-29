@@ -6,11 +6,164 @@ describe BlackPawn do
   describe '#initialize' do
     context 'when a pawn is initialized' do
       it 'returns true if row num is 1' do
-        expect(described_class.new([1, 0]).opener).to be true
+        expect(described_class.new([1, 0], nil, nil).opener).to be true
       end
 
       it 'returns false if row num is more than 1' do
-        expect(described_class.new([3, 0]).opener).to be false
+        expect(described_class.new([3, 0], nil, nil).opener).to be false
+      end
+    end
+  end
+
+  describe '#opener_moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a pawn is on its opening square' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+      subject(:starting_square) { described_class.new([1, 3], board, nil) }
+      it 'returns both moves when neither are not filled' do
+        starting_square.board[1][3] = starting_square
+        expected_output = [[2, 3], [3, 3]]
+        expect(starting_square.opening_moves).to eql(expected_output)
+      end
+
+      it 'returns only the first move if the second is filled' do
+        starting_square.board[3][3] = 12
+        expected_output = [[2, 3]]
+        expect(starting_square.opening_moves).to eql(expected_output)
+      end
+
+      it 'returns nil if the first move is blocked' do
+        starting_square.board[2][3] = 12
+        expected_output = nil
+        expect(starting_square.opening_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#capture_moves' do
+    context "when a pawn can capture the other player's piece" do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:captured) { WhitePawn.new([4, 4], board, nil) }
+      subject(:capturer) { described_class.new([3, 3], board, nil) }
+
+      it 'returns move for capture to left' do
+        capturer.board[3][3] = capturer
+        capturer.board[4][4] = captured
+        expected_output = [[4, 4]]
+        expect(capturer.capture_moves).to eql(expected_output)
+      end
+
+      it 'returns move for capture to right' do
+        capturer.board[4][2] = captured
+        capturer.board[4][4] = nil
+        expected_output = [[4, 2]]
+        expect(capturer.capture_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#non_opener_moves' do
+    context 'when a pawn is not on an opening block' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+      subject(:single_mover) { described_class.new([3, 3], board, nil) }
+      it 'returns only the move in front of it' do
+        single_mover.board[3][3] = single_mover
+        expected_output = [4, 3]
+        expect(single_mover.non_opening_moves).to eql(expected_output)
+      end
+
+      it 'returns nil if single space is blocked' do
+        single_mover.board[4][3] = 12
+        expected_output = nil
+        expect(single_mover.non_opening_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#en_passant_left' do
+    context 'when the en passant rule is in effect for a black pawn to the left' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+      subject(:captured) { WhitePawn.new([4, 4], board, nil) }
+      subject(:ep) { described_class.new([4, 3], board, { piece: captured, from_start: true }) }
+      it 'returns the en passant move to the left' do
+        ep.board[4][4] = captured
+        ep.board[4][3] = ep
+        expected_output = [5, 4]
+        expect(ep.en_passant_left).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#en_passant_right' do
+    context 'when the en passant rule is in effect for a black pawn to the right' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+      subject(:captured) { WhitePawn.new([4, 2], board, nil) }
+      subject(:ep) { described_class.new([4, 3], board, { piece: captured, from_start: true }) }
+      it 'returns the en passant move to the right' do
+        ep.board[4][2] = captured
+        ep.board[4][3] = ep
+        expected_output = [5, 2]
+        expect(ep.en_passant_right).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#en_passant' do
+    context 'when the en passant rule is in effect' do
+      subject(:ep) { described_class.new([4, 3], nil, nil) }
+      before do
+        allow(ep).to receive(:en_passant_left).and_return([5, 4])
+        allow(ep).to receive(:en_passant_right).and_return([5, 2])
+      end
+
+      it 'calls en_passant for the left' do
+        expect(ep).to receive(:en_passant_left).once
+        ep.en_passant
+      end
+
+      it 'calls en_passant for the right' do
+        expect(ep).to receive(:en_passant_right).once
+        ep.en_passant
+      end
+
+      it 'returns both sides' do
+        expected_output = [[5, 4], [5, 2]]
+        expect(ep.en_passant).to eql(expected_output)
       end
     end
   end
@@ -20,11 +173,11 @@ describe WhitePawn do
   describe '#initialize' do
     context 'when a pawn is initialized' do
       it 'returns true if row num is 6' do
-        expect(described_class.new([6, 0]).opener).to be true
+        expect(described_class.new([6, 0], nil, nil).opener).to be true
       end
 
       it 'returns false if row num is less than 6' do
-        expect(described_class.new([4, 0]).opener).to be false
+        expect(described_class.new([4, 0], nil, nil).opener).to be false
       end
     end
   end
