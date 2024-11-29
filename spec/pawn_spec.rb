@@ -2,6 +2,34 @@
 
 require_relative('./../lib/pieces/pawn')
 
+describe BlackPawn do
+  describe '#initialize' do
+    context 'when a pawn is initialized' do
+      it 'returns true if row num is 1' do
+        expect(described_class.new([1, 0]).opener).to be true
+      end
+
+      it 'returns false if row num is more than 1' do
+        expect(described_class.new([3, 0]).opener).to be false
+      end
+    end
+  end
+end
+
+describe WhitePawn do
+  describe '#initialize' do
+    context 'when a pawn is initialized' do
+      it 'returns true if row num is 6' do
+        expect(described_class.new([6, 0]).opener).to be true
+      end
+
+      it 'returns false if row num is less than 6' do
+        expect(described_class.new([4, 0]).opener).to be false
+      end
+    end
+  end
+end
+
 describe Pawn do
   describe 'on_opening?' do
     context 'when a pawn is on opening square' do

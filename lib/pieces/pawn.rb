@@ -73,13 +73,21 @@ class Pawn
 end
 
 class BlackPawn
-  attr_accessor :color
+  attr_accessor :color, :opener
 
   def initialize(pos)
     @color = 'black'
     @pos = pos
+    @opener = @pos[0] == 1
   end
 end
 
 class WhitePawn
+  attr_accessor :color, :opener
+
+  def initialize(pos)
+    @color = 'white'
+    @pos = pos
+    @opener = @pos[0] == 6
+  end
 end
