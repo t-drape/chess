@@ -14,7 +14,7 @@ end
 
 # A model of a White Rook in Chess
 class WhiteRook
-  attr_accessor :color
+  attr_accessor :color, :on_opening
 
   def initialize(pos, board)
     @color = 'white'
