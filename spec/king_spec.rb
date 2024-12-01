@@ -1,24 +1,128 @@
 # frozen_string_literal: true
 
 require_relative './../lib/pieces/king'
+require_relative './../lib/pieces/rook'
 
-describe King do
-  describe '#all_moves' do
+describe BlackKing do
+  describe '#normal_moves' do
     context 'when a king is the selected piece' do
-      subject(:king_moves) { described_class.new([3, 3]) }
+      subject(:king_moves) { described_class.new([3, 3], nil) }
       it 'returns an array' do
-        expect(king_moves.all_moves).to be_kind_of Array
+        expect(king_moves.normal_moves).to be_kind_of Array
       end
 
       it 'loops through all possible movements of a king' do
         moves = king_moves.instance_variable_get(:@movements)
         expect(moves).to receive(:each)
-        king_moves.all_moves
+        king_moves.normal_moves
       end
 
       it 'returns the correct array based on position' do
         expected_output = [[2, 2], [2, 3], [2, 4], [3, 2], [3, 4], [4, 2], [4, 3], [4, 4]]
-        expect(king_moves.all_moves).to eql(expected_output)
+        expect(king_moves.normal_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#castling_right' do # rubocop:disable Metrics/BlockLength
+    context 'when a black king castles to the right' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:castle) { described_class.new([0, 4], board) }
+
+      it 'returns correct move if available' do
+        castle.board[0][4] = castle
+        castle.board[0][0] = BlackRook.new([0, 0], board)
+        expected_output = [0, 2]
+        expect(castle.castling_right).to eql(expected_output)
+      end
+
+      it 'returns nil if rook is not present' do
+        castle.board[0][0] = nil
+        expected_output = nil
+        expect(castle.castling_right).to eql(expected_output)
+      end
+
+      it 'returns nil if path is blocked' do
+        castle.board[0][0] = BlackRook.new([0, 0], board)
+        castle.board[0][2] = 12
+        expected_output = nil
+        expect(castle.castling_right).to eql(expected_output)
+      end
+    end
+
+    context 'when a black king castles to the left' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:castle) { described_class.new([0, 4], board) }
+
+      it 'returns correct move if available' do
+        castle.board[0][4] = castle
+        castle.board[0][7] = BlackRook.new([0, 7], board)
+        expected_output = [0, 6]
+        expect(castle.castling_left).to eql(expected_output)
+      end
+
+      it 'returns nil if rook not present' do
+        castle.board[0][7] = nil
+        expected_output = nil
+        expect(castle.castling_left).to eql(expected_output)
+      end
+
+      it 'returns nil if path is blocked' do
+        castle.board[0][7] = BlackRook.new([0, 7], board)
+        castle.board[0][6] = 12
+        expected_output = nil
+        expect(castle.castling_left).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#castling' do
+    context 'when a king is picked' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:castle) { described_class.new([0, 4], board) }
+
+      before do
+        allow(castle).to receive(:castling_left).and_return([0, 6])
+        allow(castle).to receive(:castling_right).and_return([0, 2])
+      end
+
+      it 'calls castling_left once' do
+        expect(castle).to receive(:castling_left).once
+        castle.castling
+      end
+
+      it 'calls castling_right once' do
+        expect(castle).to receive(:castling_right).once
+        castle.castling
+      end
+
+      it 'returns the correct values' do
+        expected_output = [[0, 6], [0, 2]]
+        expect(castle.castling).to eql(expected_output)
       end
     end
   end
