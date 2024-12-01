@@ -52,6 +52,15 @@ class BlackKing
     moves << right unless right.nil?
     moves
   end
+
+  def moves
+    moves = []
+    normal = normal_moves
+    castles = castling
+    normal.each { |e| moves << e } unless normal.empty?
+    castles.each { |e| moves << e } unless castles.empty?
+    moves
+  end
 end
 
 # A model of a White King in Chess
@@ -102,6 +111,15 @@ class WhiteKing
     right = castling_right
     moves << left unless left.nil?
     moves << right unless right.nil?
+    moves
+  end
+
+  def moves
+    moves = []
+    normal = normal_moves
+    castles = castling
+    normal.each { |e| moves << e } unless normal.empty?
+    castles.each { |e| moves << e } unless castles.empty?
     moves
   end
 end

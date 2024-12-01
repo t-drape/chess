@@ -58,6 +58,7 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
   describe '#castling_left' do # rubocop:disable Metrics/BlockLength
     context 'when a black king castles to the left' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
@@ -124,6 +125,47 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
       it 'returns the correct values' do
         expected_output = [[0, 6], [0, 2]]
         expect(castle.castling).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a king is the chosen piece' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:king_mover) { described_class.new([0, 4], board) }
+
+      before do
+        allow(king_mover).to receive(:normal_moves).and_return([[1, 4], [1, 3]])
+        allow(king_mover).to receive(:castling).and_return([[0, 2]])
+      end
+
+      it 'calls castling once' do
+        expect(king_mover).to receive(:castling).once
+        king_mover.moves
+      end
+
+      it 'calls normal moves once' do
+        expect(king_mover).to receive(:normal_moves).once
+        king_mover.moves
+      end
+
+      it 'only adds correct values from castling' do
+        allow(king_mover).to receive(:castling).and_return([])
+        expected_output = [[1, 4], [1, 3]]
+        expect(king_mover.moves).to eql(expected_output)
+      end
+
+      it 'returns the correct values' do
+        expected_output = [[1, 4], [1, 3], [0, 2]]
+        expect(king_mover.moves).to eql(expected_output)
       end
     end
   end
@@ -251,6 +293,47 @@ describe WhiteKing do # rubocop:disable Metrics/BlockLength
       it 'returns the correct values' do
         expected_output = [[7, 6], [7, 2]]
         expect(castle.castling).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a king is the chosen piece' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:king_mover) { described_class.new([7, 4], board) }
+
+      before do
+        allow(king_mover).to receive(:normal_moves).and_return([[6, 4], [6, 3]])
+        allow(king_mover).to receive(:castling).and_return([[7, 2]])
+      end
+
+      it 'calls castling once' do
+        expect(king_mover).to receive(:castling).once
+        king_mover.moves
+      end
+
+      it 'calls normal moves once' do
+        expect(king_mover).to receive(:normal_moves).once
+        king_mover.moves
+      end
+
+      it 'only adds correct values from castling' do
+        allow(king_mover).to receive(:castling).and_return([])
+        expected_output = [[6, 4], [6, 3]]
+        expect(king_mover.moves).to eql(expected_output)
+      end
+
+      it 'returns the correct values' do
+        expected_output = [[6, 4], [6, 3], [7, 2]]
+        expect(king_mover.moves).to eql(expected_output)
       end
     end
   end

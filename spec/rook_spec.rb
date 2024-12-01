@@ -5,6 +5,18 @@ require_relative('./../lib/pieces/rook')
 describe BlackRook do
   describe '#moves' do
   context "when a rook is selected" do
+    board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+    subject(:castle) {described_class.new([0,0], board)}
+
+    allow(castle).to receive(:castling).once
     
     it "calls castling once" do
 

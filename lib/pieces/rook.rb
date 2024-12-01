@@ -23,3 +23,9 @@ class WhiteRook
     @on_opening = true
   end
 end
+
+# Run a loop for rook moves
+# From current square to end of column,
+# If at any point the current spot is taken,
+# Include it in the moves array,
+# Stop the Loop
