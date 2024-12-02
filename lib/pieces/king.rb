@@ -92,7 +92,7 @@ class WhiteKing
     return unless @board[7][1].nil? && @board[7][2].nil? && @board[7][3].nil?
     return unless rook.is_a?(WhiteRook) && rook.color == 'white' && rook.on_opening
 
-    [7, 2]
+    [7, 1]
   end
 
   def castling_right

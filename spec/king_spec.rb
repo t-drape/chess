@@ -208,7 +208,7 @@ describe WhiteKing do # rubocop:disable Metrics/BlockLength
       it 'returns correct move if available' do
         castle.board[7][4] = castle
         castle.board[7][0] = WhiteRook.new([7, 0], board)
-        expected_output = [7, 2]
+        expected_output = [7, 1]
         expect(castle.castling_left).to eql(expected_output)
       end
 
