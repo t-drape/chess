@@ -40,7 +40,7 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
       it 'returns correct move if available' do
         castle.board[0][4] = castle
         castle.board[0][0] = BlackRook.new([0, 0], board)
-        expected_output = [0, 2]
+        expected_output = [0, 1]
         expect(castle.castling_right).to eql(expected_output)
       end
 

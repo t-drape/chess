@@ -5,7 +5,7 @@ require_relative('./../lib/pieces/king')
 
 describe BlackRook do # rubocop:disable Metrics/BlockLength
   describe '#moves' do # rubocop:disable Metrics/BlockLength
-    context 'when a rook is selected' do
+    context 'when a rook is selected' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -155,14 +155,6 @@ describe BlackRook do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#horizontal_moves' do
-    context 'when the rook at square 0,0 is selected' do
-    end
-
-    context 'when the rook at square 0,7 is selected' do
-    end
-  end
-
   describe '#up_to_pos_zero_moves' do
     context "when a rook's vertical available moves are being found" do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
@@ -213,6 +205,183 @@ describe BlackRook do # rubocop:disable Metrics/BlockLength
         vert_mover.board[4][7] = BlackRook.new([4, 7], board)
         expected_output = []
         expect(vert_mover.from_pos_zero_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#horizontal_moves' do
+    context 'when the rook is at square 1,3 is selected' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:mover) { described_class.new([1, 3], board) }
+
+      it 'returns the correct moves in each direction' do
+        mover.board[1][3] = mover
+        expected_output = [[1, 2], [1, 1], [1, 0], [1, 4], [1, 5], [1, 6], [1, 7]]
+        expect(mover.horizontal_moves).to eql(expected_output)
+      end
+
+      it 'returns an empty array if both ways are blocked' do
+        mover.board[1][2] = BlackRook.new([1, 2], board)
+        mover.board[1][4] = BlackRook.new([1, 4], board)
+        expected_output = []
+        expect(mover.horizontal_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#up_to_pos_one_moves' do
+    context 'when a rook is selected' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:h_mover) { described_class.new([0, 7], board) }
+
+      it 'returns all moves with x index less than spot' do
+        h_mover.board[0][7] = h_mover
+        expected_output = [[0, 6], [0, 5], [0, 4], [0, 3], [0, 2], [0, 1], [0, 0]]
+        expect(h_mover.up_to_pos_one_moves).to eql(expected_output)
+      end
+
+      it 'returns empty array if blocked' do
+        h_mover.board[0][6] = BlackRook.new([0, 6], board)
+        expected_output = []
+        expect(h_mover.up_to_pos_one_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#from_pos_one_moves' do
+    context 'when a rook is selected' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:h_mover) { described_class.new([0, 4], board) }
+
+      it 'returns all moves with x index higher than spot' do
+        h_mover.board[0][4] = h_mover
+        expected_output = [[0, 5], [0, 6], [0, 7]]
+        expect(h_mover.from_pos_one_moves).to eql(expected_output)
+      end
+
+      it 'returns empty array if blocked' do
+        h_mover.board[0][5] = BlackRook.new([0, 5], board)
+        expected_output = []
+        expect(h_mover.from_pos_one_moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe `#castling` do
+    context 'when the rook is selected and castling is available' do
+      subject(:castle) { described_class.new([0, 0], nil) }
+
+      before do
+        allow(castle).to receive(:castling_left).and_return([0, 5])
+        allow(castle).to receive(:castling_right).and_return([0, 2])
+      end
+
+      it 'returns the correct values' do
+        expected_output = [[0, 5], [0, 2]]
+        expect(castle.castling).to eql(expected_output)
+      end
+
+      it 'calls castling_left once' do
+        expect(castle).to receive(:castling_left).once
+        castle.castling_left
+      end
+
+      it 'calls castling_right once' do
+        expect(castle).to receive(:castling_right).once
+        castle.castling_right
+      end
+    end
+  end
+
+  describe '#castling_left' do # rubocop:disable Metrics/BlockLength
+    context 'when castling to the left' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:castle) { described_class.new([0, 7], board) }
+
+      it 'returns the correct move if path open' do
+        castle.board[0][4] = BlackKing.new([0, 4], board)
+        expected_output = [0, 5]
+        expect(castle.castling_left).to eql(expected_output)
+      end
+
+      it 'returns nil if path is blocked' do
+        castle.board[0][5] = 12
+        expected_output = nil
+        expect(castle.castling_left).to eql(expected_output)
+      end
+
+      it 'returns nil if king is not present' do
+        castle.board[0][5] = nil
+        castle.board[0][4] = nil
+        expected_output = nil
+        expect(castle.castling_left).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#castling_right' do
+    context 'when castling to the right' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:castle) { described_class.new([0, 7], board) }
+
+      it 'returns the correct move if path is open' do
+        castle.board[0][0] = castle
+        castle.board[0][4] = BlackKing.new([0, 4], board)
+        expected_output = [0, 2]
+        expect(castle.castling_right).to eql(expected_output)
+      end
+
+      it 'returns nil if path is blocked' do
+        castle.board[0][3] = 12
+        expected_output = nil
+        expect(castle.castling_right).to eql(expected_output)
+      end
+
+      it 'returns nil if king is not present' do
+        castle.board[0][3] = nil
+        castle.board[0][4] = nil
+        expected_output = nil
+        expect(castle.castling_right).to eql(expected_output)
       end
     end
   end

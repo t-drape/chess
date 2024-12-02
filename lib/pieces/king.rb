@@ -4,7 +4,7 @@ require_relative './rook'
 
 # A model of a Black King in Chess
 class BlackKing
-  attr_accessor :pos, :board, :on_opening
+  attr_accessor :pos, :board, :on_opening, :color
 
   def initialize(pos, board)
     @color = 'black'
@@ -31,7 +31,7 @@ class BlackKing
     return unless @board[0][1].nil? && @board[0][2].nil? && @board[0][3].nil?
     return unless rook.is_a?(BlackRook) && rook.color == 'black' && rook.on_opening
 
-    [0, 2]
+    [0, 1]
   end
 
   def castling_left
@@ -65,7 +65,7 @@ end
 
 # A model of a White King in Chess
 class WhiteKing
-  attr_accessor :pos, :board, :on_opening
+  attr_accessor :pos, :board, :on_opening, :color
 
   def initialize(pos, board)
     @color = 'white'

@@ -65,10 +65,67 @@ class BlackRook
   end
 
   def horizontal_moves
-    []
+    moves = []
+    less = up_to_pos_one_moves
+    more = from_pos_one_moves
+    less.each { |e| moves << e } unless less.empty?
+    more.each { |e| moves << e } unless more.empty?
+    moves
+  end
+
+  def up_to_pos_one_moves
+    moves = []
+    x = @pos[1]
+    while x.positive?
+      x -= 1
+      break if @board[@pos[0]][x] && @board[@pos[0]][x].color == @color
+
+      moves << [@pos[0], x]
+      break unless @board[@pos[0]][x].nil?
+    end
+    moves
+  end
+
+  def from_pos_one_moves
+    moves = []
+    x = @pos[1]
+    while x < 7
+      x += 1
+      break if @board[@pos[0]][x] && @board[@pos[0]][x].color == @color
+
+      moves << [@pos[0], x]
+      break unless @board[@pos[0]][x].nil?
+    end
+    moves
   end
 
   def castling
+    moves = []
+    left = castling_left
+    right = castling_right
+    moves << left unless left.nil?
+    moves << right unless right.nil?
+    moves
+  end
+
+  def castling_left
+    return unless @on_opening
+
+    king = @board[0][4]
+    return unless @board[0][5].nil? && @board[0][6].nil?
+    return unless king.is_a?(BlackKing) && king.color == 'black' && king.on_opening
+
+    [0, 5]
+  end
+
+  def castling_right
+    return unless @on_opening
+
+    king = @board[0][4]
+    return unless @board[0][1].nil? && @board[0][2].nil? && @board[0][3].nil?
+    return unless king.is_a?(BlackKing) && king.color == 'black' && king.on_opening
+
+    [0, 2]
   end
 end
 
