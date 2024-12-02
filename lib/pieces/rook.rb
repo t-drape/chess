@@ -38,7 +38,7 @@ class BlackRook
     moves
   end
 
-  def up_to_pos_zero_moves
+  def up_to_pos_zero_moves # rubocop:disable Metrics/AbcSize
     moves = []
     y = @pos[0]
     while y.positive?
@@ -51,7 +51,7 @@ class BlackRook
     moves
   end
 
-  def from_pos_zero_moves
+  def from_pos_zero_moves # rubocop:disable Metrics/AbcSize
     moves = []
     y = @pos[0]
     while y < 7
@@ -167,7 +167,7 @@ class WhiteRook
     moves
   end
 
-  def up_to_pos_zero_moves
+  def up_to_pos_zero_moves # rubocop:disable Metrics/AbcSize
     moves = []
     y = @pos[0]
     while y.positive?
@@ -180,7 +180,7 @@ class WhiteRook
     moves
   end
 
-  def from_pos_zero_moves
+  def from_pos_zero_moves # rubocop:disable Metrics/AbcSize
     moves = []
     y = @pos[0]
     while y < 7

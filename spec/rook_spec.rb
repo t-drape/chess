@@ -387,7 +387,7 @@ describe BlackRook do # rubocop:disable Metrics/BlockLength
   end
 end
 
-describe WhiteRook do
+describe WhiteRook do # rubocop:disable Metrics/BlockLength
   describe '#moves' do # rubocop:disable Metrics/BlockLength
     context 'when a rook is selected' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
