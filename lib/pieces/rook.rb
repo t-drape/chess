@@ -30,9 +30,42 @@ class BlackRook
   end
 
   def vertical_moves
+    moves = []
+    less = up_to_pos_zero_moves
+    more = from_pos_zero_moves
+    less.each { |e| moves << e } unless less.empty?
+    more.each { |e| moves << e } unless more.empty?
+    moves
+  end
+
+  def up_to_pos_zero_moves
+    moves = []
+    y = @pos[0]
+    while y.positive?
+      y -= 1
+      break if !@board[y][@pos[1]].nil? && @board[y][@pos[1]].color == @color
+
+      moves << [y, @pos[1]]
+      break unless @board[y][@pos[1]].nil?
+    end
+    moves
+  end
+
+  def from_pos_zero_moves
+    moves = []
+    y = @pos[0]
+    while y < 7
+      y += 1
+      break if !board[y][@pos[1]].nil? && @board[y][@pos[1]].color == @color
+
+      moves << [y, @pos[1]]
+      break unless @board[y][@pos[1]].nil?
+    end
+    moves
   end
 
   def horizontal_moves
+    []
   end
 
   def castling
