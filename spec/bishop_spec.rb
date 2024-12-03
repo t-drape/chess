@@ -58,8 +58,8 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
       subject(:lowest) { described_class.new([2, 3], board) }
 
       before do
-        allow(lowest).to receive(:lowest_from_left).and_return([[1, 4], [0, 5]])
-        allow(lowest).to receive(:lowest_from_right).and_return([[1, 2], [0, 1]])
+        allow(lowest).to receive(:from_lowest_left).and_return([[1, 4], [0, 5]])
+        allow(lowest).to receive(:from_lowest_right).and_return([[1, 2], [0, 1]])
       end
 
       it 'calls from_lowest_left once' do
@@ -93,19 +93,19 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
       subject(:lower_left) { described_class.new([2, 4], board) }
 
       it 'returns all values to the left of pos' do
-        lower_left.board = lower_left
+        lower_left.board[2][4] = lower_left
         expected_output = [[1, 5], [0, 6]]
         expect(lower_left.from_lowest_left).to eql(expected_output)
       end
 
       it 'returns correct values when path is blocked later in path' do
-        lower_left.board[0][6] = 12
+        lower_left.board[0][6] = BlackRook.new([0, 6], board)
         expected_output = [[1, 5]]
         expect(lower_left.from_lowest_left).to eql(expected_output)
       end
 
       it 'returns empty array when blocked on first move' do
-        lower_left.board[1][5] = 12
+        lower_left.board[1][5] = BlackRook.new([1, 5], board)
         expected_output = []
         expect(lower_left.from_lowest_left).to eql(expected_output)
       end
@@ -118,7 +118,43 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#from_lowest_right' do
+  describe '#from_lowest_right' do # rubocop:disable Metrics/BlockLength
+    context 'when a bishop is selected' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:lower_right) { described_class.new([2, 4], board) }
+
+      it 'returns all values to the right of pos' do
+        lower_right.board[2][4] = lower_right
+        expected_output = [[1, 3], [0, 2]]
+        expect(lower_right.from_lowest_right).to eql(expected_output)
+      end
+
+      it 'returns correct values when path is blocked later in path' do
+        lower_right.board[0][2] = BlackRook.new([0, 2], board)
+        expected_output = [[1, 3]]
+        expect(lower_right.from_lowest_right).to eql(expected_output)
+      end
+
+      it 'returns empty array when blocked on first move' do
+        lower_right.board[1][3] = BlackRook.new([1, 3], board)
+        expected_output = []
+        expect(lower_right.from_lowest_right).to eql(expected_output)
+      end
+
+      it 'returns correct value if blocked by opponent' do
+        lower_right.board[1][3] = WhiteRook.new([1, 3], board)
+        expected_output = [[1, 3]]
+        expect(lower_right.from_lowest_right).to eql(expected_output)
+      end
+    end
   end
 
   describe 'moves_to_highest' do # rubocop:disable Metrics/BlockLength
@@ -156,10 +192,82 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#to_highest_left' do
+  describe '#to_highest_left' do # rubocop:disable Metrics/BlockLength
+    context 'when a bishop is selected' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:higher_left) { described_class.new([5, 2], board) }
+
+      it 'returns all moves to left higher than y' do
+        higher_left.board[5][2] = higher_left
+        expected_output = [[6, 3], [7, 4]]
+        expect(higher_left.to_highest_left).to eql(expected_output)
+      end
+
+      it 'returns correct values when path is blocked later in path' do
+        higher_left.board[7][4] = BlackRook.new([7, 4], board)
+        expected_output = [[6, 3]]
+        expect(higher_left.to_highest_left).to eql(expected_output)
+      end
+
+      it 'returns empty array when blocked on first move' do
+        higher_left.board[6][3] = BlackRook.new([6, 3], board)
+        expected_output = []
+        expect(higher_left.to_highest_left).to eql(expected_output)
+      end
+
+      it 'returns correct value if blocked by opponent' do
+        higher_left.board[6][3] = WhiteRook.new([6, 3], board)
+        expected_output = [[6, 3]]
+        expect(higher_left.to_highest_left).to eql(expected_output)
+      end
+    end
   end
 
-  describe '#to_highest_right' do
+  describe '#to_highest_right' do # rubocop:disable Metrics/BlockLength
+    context 'when a bishop is selected' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:higher_right) { described_class.new([5, 2], board) }
+
+      it 'returns all moves to right higher than y' do
+        higher_right.board[5][2] = higher_right
+        expected_output = [[6, 1], [7, 0]]
+        expect(higher_right.to_highest_right).to eql(expected_output)
+      end
+
+      it 'returns correct values when path is blocked later in path' do
+        higher_right.board[7][0] = BlackRook.new([7, 0], board)
+        expected_output = [[6, 1]]
+        expect(higher_right.to_highest_right).to eql(expected_output)
+      end
+
+      it 'returns empty array when blocked on first move' do
+        higher_right.board[6][1] = BlackRook.new([6, 1], board)
+        expected_output = []
+        expect(higher_right.to_highest_right).to eql(expected_output)
+      end
+
+      it 'returns correct value if blocked by opponent' do
+        higher_right.board[6][1] = WhiteRook.new([6, 1], board)
+        expected_output = [[6, 1]]
+        expect(higher_right.to_highest_right).to eql(expected_output)
+      end
+    end
   end
 end
 
