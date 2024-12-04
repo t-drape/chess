@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# A class to model A Black Bishop in Chess
 class BlackBishop
   attr_accessor :color, :board
 
@@ -99,6 +102,7 @@ class BlackBishop
   end
 end
 
+# A class to model a White Bishop in Chess
 class WhiteBishop
   attr_accessor :color, :board
 
