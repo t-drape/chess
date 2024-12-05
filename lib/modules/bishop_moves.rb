@@ -2,7 +2,7 @@
 
 # Find all moves for a Black Bishop
 module BlackBishopMovement
-  def bishop_moves
+  def moves
     moves = []
     lows = moves_from_lowest
     highs = moves_to_highest
@@ -96,7 +96,7 @@ end
 
 # Find all moves for a White BIshop
 module WhiteBishopMovement
-  def bishop_moves
+  def moves
     moves = []
     lows = moves_from_lowest
     highs = moves_to_highest
