@@ -10,6 +10,8 @@ class BlackQueen
 
   include BlackBishopMovement
 
+  attr_accessor :board
+
   def initialize(pos, board)
     @color = 'black'
     @pos = pos
@@ -17,6 +19,12 @@ class BlackQueen
   end
 
   def full_moves
+    return_moves = []
+    bishop = moves
+    rook = normal_moves
+    bishop.each { |e| moves << e } unless bishop.empty?
+    rook.each { |e| moves << e } unless rook.empty?
+    return_moves
   end
 end
 
@@ -24,7 +32,7 @@ end
 class WhiteQueen
   include WhiteRookMovement
 
-  include WihteBishopMovement
+  include WhiteBishopMovement
 
   def initialize(pos, board)
     @color = 'white'

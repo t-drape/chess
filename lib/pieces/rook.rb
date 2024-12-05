@@ -15,6 +15,15 @@ class BlackRook
     @on_opening = true
   end
 
+  def moves
+    moves = []
+    normal = normal_moves
+    castles = castling
+    normal.each { |e| moves << e } unless normal.empty?
+    castles.each { |e| moves << e } unless castles.empty?
+    moves
+  end
+
   def castling
     moves = []
     left = castling_left
@@ -56,6 +65,15 @@ class WhiteRook
     @pos = pos
     @board = board
     @on_opening = true
+  end
+
+  def moves
+    moves = []
+    normal = normal_moves
+    castles = castling
+    normal.each { |e| moves << e } unless normal.empty?
+    castles.each { |e| moves << e } unless castles.empty?
+    moves
   end
 
   def castling

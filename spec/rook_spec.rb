@@ -4,7 +4,7 @@ require_relative('./../lib/pieces/rook')
 require_relative('./../lib/pieces/king')
 
 describe BlackRook do # rubocop:disable Metrics/BlockLength
-  describe 'rook_#moves' do # rubocop:disable Metrics/BlockLength
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
     context 'when a rook is selected' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -25,17 +25,17 @@ describe BlackRook do # rubocop:disable Metrics/BlockLength
       it 'calls castling once' do
         rook_mover.board[0][0] = rook_mover
         expect(rook_mover).to receive(:castling).once
-        rook_mover.rook_moves
+        rook_mover.moves
       end
 
       it 'calls normal_moves once' do
         expect(rook_mover).to receive(:normal_moves).once
-        rook_mover.rook_moves
+        rook_mover.moves
       end
 
       it 'returns the correct moves' do
         expected_output = [[1, 0], [2, 0], [0, 1], [0, 2]]
-        expect(rook_mover.rook_moves).to eql(expected_output)
+        expect(rook_mover.moves).to eql(expected_output)
       end
     end
   end
@@ -388,7 +388,7 @@ describe BlackRook do # rubocop:disable Metrics/BlockLength
 end
 
 describe WhiteRook do # rubocop:disable Metrics/BlockLength
-  describe '#rook_moves' do # rubocop:disable Metrics/BlockLength
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
     context 'when a rook is selected' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -408,17 +408,17 @@ describe WhiteRook do # rubocop:disable Metrics/BlockLength
 
       it 'calls castling once' do
         expect(rook_mover).to receive(:castling).once
-        rook_mover.rook_moves
+        rook_mover.moves
       end
 
       it 'calls normal_moves once' do
         expect(rook_mover).to receive(:normal_moves).once
-        rook_mover.rook_moves
+        rook_mover.moves
       end
 
       it 'returns the correct moves' do
         expected_output = [[6, 0], [5, 0], [7, 1], [7, 2]]
-        expect(rook_mover.rook_moves).to eql(expected_output)
+        expect(rook_mover.moves).to eql(expected_output)
       end
     end
   end

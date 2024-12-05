@@ -2,15 +2,6 @@
 
 # Find all moves for a black rook except castling
 module BlackRookMovement
-  def rook_moves
-    moves = []
-    normal = normal_moves
-    castles = castling
-    normal.each { |e| moves << e } unless normal.empty?
-    castles.each { |e| moves << e } unless castles.empty?
-    moves
-  end
-
   def normal_moves
     moves = []
     vertical = vertical_moves
@@ -93,15 +84,6 @@ end
 
 # Find all moves for a white rook except castling
 module WhiteRookMovement
-  def rook_moves
-    moves = []
-    normal = normal_moves
-    castles = castling
-    normal.each { |e| moves << e } unless normal.empty?
-    castles.each { |e| moves << e } unless castles.empty?
-    moves
-  end
-
   def normal_moves
     moves = []
     vertical = vertical_moves
