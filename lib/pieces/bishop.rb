@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+module BlackBishopMovement
+end
+
+module WhiteBishopMovement
+end
+
 # A class to model A Black Bishop in Chess
 class BlackBishop
   attr_accessor :color, :board
