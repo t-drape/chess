@@ -20,10 +20,10 @@ class BlackQueen
 
   def full_moves
     return_moves = []
-    bishop = moves
     rook = normal_moves
-    bishop.each { |e| moves << e } unless bishop.empty?
-    rook.each { |e| moves << e } unless rook.empty?
+    bishop = moves
+    rook.each { |e| return_moves << e } unless rook.nil? || rook.empty?
+    bishop.each { |e| return_moves << e } unless bishop.nil? || bishop.empty?
     return_moves
   end
 end
@@ -34,9 +34,20 @@ class WhiteQueen
 
   include WhiteBishopMovement
 
+  attr_accessor :board
+
   def initialize(pos, board)
     @color = 'white'
     @pos = pos
     @board = board
+  end
+
+  def full_moves
+    return_moves = []
+    rook = normal_moves
+    bishop = moves
+    rook.each { |e| return_moves << e } unless rook.nil? || rook.empty?
+    bishop.each { |e| return_moves << e } unless bishop.nil? || bishop.empty?
+    return_moves
   end
 end
