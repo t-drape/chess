@@ -2,7 +2,7 @@
 
 # Find all moves for a black rook except castling
 module BlackRookMovement
-  def moves
+  def rook_moves
     moves = []
     normal = normal_moves
     castles = castling
@@ -93,7 +93,7 @@ end
 
 # Find all moves for a white rook except castling
 module WhiteRookMovement
-  def moves
+  def rook_moves
     moves = []
     normal = normal_moves
     castles = castling

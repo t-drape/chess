@@ -4,6 +4,7 @@ require_relative('./../modules/rook_moves')
 
 require_relative('./../modules/bishop_moves')
 
+# A model of a Black Queen in Chess
 class BlackQueen
   include BlackRookMovement
 
@@ -14,8 +15,12 @@ class BlackQueen
     @pos = pos
     @board = board
   end
+
+  def full_moves
+  end
 end
 
+# A model of a White Queen in Chess
 class WhiteQueen
   include WhiteRookMovement
 
