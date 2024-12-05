@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-require_relative('./rook')
+require_relative('./../modules/rook_moves')
 
-require_relative('./bishop')
+require_relative('./../modules/bishop_moves')
 
 class BlackQueen
+  include BlackRookMovement
+
+  include BlackBishopMovement
+
   def initialize(pos, board)
     @color = 'black'
     @pos = pos
@@ -13,6 +17,10 @@ class BlackQueen
 end
 
 class WhiteQueen
+  include WhiteRookMovement
+
+  include WihteBishopMovement
+
   def initialize(pos, board)
     @color = 'white'
     @pos = pos
