@@ -26,7 +26,7 @@ class Game
   end
 
   def change_player
-    @current_player = @current_player == @player_one ? @player_two : @player_two
+    @current_player = @current_player == @player_one ? @player_two : @player_one
   end
 
   def check_pawns

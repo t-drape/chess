@@ -8,7 +8,24 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 
 describe Game do # rubocop:disable Metrics/BlockLength
-  describe 'check_pawns' do
+  describe '#change_player' do
+    context 'when a round is over' do
+      subject(:player_turn) { described_class.new }
+      it 'changes the player from player one to player two' do
+        expect { player_turn.change_player }.to change {
+          player_turn.instance_variable_get(:@current_player)
+        }.from('white').to('black')
+      end
+
+      it 'changes the player from player two to player one' do
+        player_turn.change_player
+        expect { player_turn.change_player }.to change {
+          player_turn.instance_variable_get(:@current_player)
+        }.from('black').to('white')
+      end
+    end
+  end
+  describe '#check_pawns' do
     context 'when a moves is over' do
       subject(:pawn_change) { described_class.new }
 
