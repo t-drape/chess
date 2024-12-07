@@ -25,6 +25,10 @@ class Game
     end
   end
 
+  def check_message
+    puts "#{@current_player.capitalize} king is in check!"
+  end
+
   def change_player
     @current_player = @current_player == @player_one ? @player_two : @player_one
   end

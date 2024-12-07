@@ -25,6 +25,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
   describe '#check_pawns' do
     context 'when a moves is over' do
       subject(:pawn_change) { described_class.new }
@@ -41,6 +42,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
   describe '#pawn_change_white' do # rubocop:disable Metrics/BlockLength
     context 'when a move is over' do # rubocop:disable Metrics/BlockLength
       subject(:rows) { described_class.new }
@@ -230,6 +232,23 @@ describe Game do # rubocop:disable Metrics/BlockLength
         expect do
           new_piece.create_new_piece_white('queen', [0, 6])
         end.to change { new_piece.board[0][6].class }.from(WhitePawn).to(WhiteQueen)
+      end
+    end
+  end
+
+  describe '#check_message' do
+    context 'when a king is in check' do
+      subject(:check) { described_class.new }
+
+      it 'returns the correct message for a white king' do
+        message = "White king is in check!\n"
+        expect { check.check_message }.to output(message).to_stdout
+      end
+
+      it 'returns the correct message for a black king' do
+        check.change_player
+        message = "Black king is in check!\n"
+        expect { check.check_message }.to output(message).to_stdout
       end
     end
   end
