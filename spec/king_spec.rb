@@ -2,6 +2,10 @@
 
 require_relative './../lib/pieces/king'
 require_relative './../lib/pieces/rook'
+require_relative './../lib/pieces/queen'
+require_relative './../lib/pieces/bishop'
+require_relative './../lib/pieces/pawn'
+require_relative './../lib/pieces/knight'
 
 describe BlackKing do # rubocop:disable Metrics/BlockLength
   describe '#normal_moves' do
@@ -166,6 +170,506 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
       it 'returns the correct values' do
         expected_output = [[1, 4], [1, 3], [0, 2]]
         expect(king_mover.moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check?' do # rubocop:disable Metrics/BlockLength
+    context 'when a move is made' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_vertical?).and_return(false)
+        allow(check).to receive(:in_check_horizontal?).and_return(false)
+        allow(check).to receive(:in_check_diagonal?).and_return(true)
+      end
+
+      it 'calls in_check_vertical? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_vertical?).once
+        check.in_check?
+      end
+
+      it 'calls in_check_horizontal? once' do
+        expect(check).to receive(:in_check_horizontal?).once
+        check.in_check?
+      end
+
+      it 'calls in_check_diagonal? once' do
+        expect(check).to receive(:in_check_diagonal?).once
+        check.in_check?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_vertical?' do
+    context 'when in_check is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_up?).and_return(false)
+        allow(check).to receive(:in_check_down?).and_return(true)
+      end
+
+      it 'calls in_check_up? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_up?).once
+        check.in_check_vertical?
+      end
+
+      it 'calls in_check_down? once' do
+        expect(check).to receive(:in_check_down?).once
+        check.in_check_vertical?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check_vertical?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_horizontal?' do
+    context 'when in_check? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_left?).and_return(false)
+        allow(check).to receive(:in_check_right?).and_return(true)
+      end
+
+      it 'calls in_check_left? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_left?).once
+        check.in_check_horizontal?
+      end
+
+      it 'calls in_check_right? once' do
+        expect(check).to receive(:in_check_right?).once
+        check.in_check_horizontal?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check_horizontal?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_diagonal?' do
+    context 'when in_check? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_left_up?).and_return(false)
+        allow(check).to receive(:in_check_left_down?).and_return(false)
+        allow(check).to receive(:in_check_right_up?).and_return(false)
+        allow(check).to receive(:in_check_right_down?).and_return(true)
+      end
+
+      it 'calls in_check_left_up? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_left_up?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_left_down? once' do
+        expect(check).to receive(:in_check_left_down?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_right_up? once' do
+        expect(check).to receive(:in_check_right_up?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_right_down? once' do
+        expect(check).to receive(:in_check_right_down?).once
+        check.in_check_diagonal?
+      end
+
+      it 'returns true when only one is true' do
+        expected_output = true
+        expect(check.in_check_diagonal?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_up?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[0][4] = check
+        expected_output = false
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[0][4] = check
+        check.board[3][4] = BlackRook.new([3, 4], board)
+        expected_output = false
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[0][4] = check
+        check.board[3][4] = WhiteRook.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[0][4] = check
+        check.board[3][4] = WhiteQueen.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_down?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([7, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[7][4] = check
+        expected_output = false
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[7][4] = check
+        check.board[3][4] = BlackRook.new([3, 4], board)
+        expected_output = false
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[7][4] = check
+        check.board[3][4] = WhiteRook.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[7][4] = check
+        check.board[3][4] = WhiteQueen.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([3, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[3][4] = check
+        expected_output = false
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[3][4] = check
+        check.board[3][0] = BlackRook.new([3, 0], board)
+        expected_output = false
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[3][4] = check
+        check.board[3][0] = WhiteRook.new([3, 0], board)
+        expected_output = true
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[3][4] = check
+        check.board[3][0] = WhiteQueen.new([3, 0], board)
+        expected_output = true
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([3, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[3][4] = check
+        expected_output = false
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[3][4] = check
+        check.board[3][7] = BlackRook.new([3, 7], board)
+        expected_output = false
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[3][4] = check
+        check.board[3][7] = WhiteRook.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[3][4] = check
+        check.board[3][7] = WhiteQueen.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left_up?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[6][4] = BlackBishop.new([6, 4], board)
+        expected_output = false
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[6][4] = WhiteBishop.new([6, 4], board)
+        expected_output = true
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[6][4] = WhiteQueen.new([6, 4], board)
+        expected_output = true
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left_down?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[4][4] = BlackBishop.new([4, 4], board)
+        expected_output = false
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[4][4] = nil
+        check.board[2][2] = WhiteBishop.new([2, 2], board)
+        expected_output = true
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[4][4] = WhiteQueen.new([4, 4], board)
+        expected_output = true
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right_up?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[7][7] = BlackBishop.new([7, 7], board)
+        expected_output = false
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[7][7] = WhiteBishop.new([7, 7], board)
+        expected_output = true
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[7][7] = WhiteQueen.new([7, 7], board)
+        expected_output = true
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right_down?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[4][6] = BlackBishop.new([4, 6], board)
+        expected_output = false
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[4][6] = nil
+        check.board[3][7] = WhiteBishop.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[4][6] = WhiteQueen.new([4, 6], board)
+        expected_output = true
+        expect(check.in_check_right_down?).to eql(expected_output)
       end
     end
   end
@@ -334,6 +838,506 @@ describe WhiteKing do # rubocop:disable Metrics/BlockLength
       it 'returns the correct values' do
         expected_output = [[6, 4], [6, 3], [7, 2]]
         expect(king_mover.moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check?' do # rubocop:disable Metrics/BlockLength
+    context 'when a move is made' do # rubocop:disable Metrics/BlockLength
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_vertical?).and_return(false)
+        allow(check).to receive(:in_check_horizontal?).and_return(false)
+        allow(check).to receive(:in_check_diagonal?).and_return(true)
+      end
+
+      it 'calls in_check_vertical? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_vertical?).once
+        check.in_check?
+      end
+
+      it 'calls in_check_horizontal? once' do
+        expect(check).to receive(:in_check_horizontal?).once
+        check.in_check?
+      end
+
+      it 'calls in_check_diagonal? once' do
+        expect(check).to receive(:in_check_diagonal?).once
+        check.in_check?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_vertical?' do
+    context 'when in_check is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_up?).and_return(false)
+        allow(check).to receive(:in_check_down?).and_return(true)
+      end
+
+      it 'calls in_check_up? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_up?).once
+        check.in_check_vertical?
+      end
+
+      it 'calls in_check_down? once' do
+        expect(check).to receive(:in_check_down?).once
+        check.in_check_vertical?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check_vertical?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_horizontal?' do
+    context 'when in_check? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_left?).and_return(false)
+        allow(check).to receive(:in_check_right?).and_return(true)
+      end
+
+      it 'calls in_check_left? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_left?).once
+        check.in_check_horizontal?
+      end
+
+      it 'calls in_check_right? once' do
+        expect(check).to receive(:in_check_right?).once
+        check.in_check_horizontal?
+      end
+
+      it 'returns true if only one is true' do
+        expected_output = true
+        expect(check.in_check_horizontal?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_diagonal?' do
+    context 'when in_check? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      before do
+        allow(check).to receive(:in_check_left_up?).and_return(false)
+        allow(check).to receive(:in_check_left_down?).and_return(false)
+        allow(check).to receive(:in_check_right_up?).and_return(false)
+        allow(check).to receive(:in_check_right_down?).and_return(true)
+      end
+
+      it 'calls in_check_left_up? once' do
+        check.board[0][4] = check
+        expect(check).to receive(:in_check_left_up?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_left_down? once' do
+        expect(check).to receive(:in_check_left_down?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_right_up? once' do
+        expect(check).to receive(:in_check_right_up?).once
+        check.in_check_diagonal?
+      end
+
+      it 'calls in_check_right_down? once' do
+        expect(check).to receive(:in_check_right_down?).once
+        check.in_check_diagonal?
+      end
+
+      it 'returns true when only one is true' do
+        expected_output = true
+        expect(check.in_check_diagonal?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_down?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[0][4] = check
+        expected_output = false
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[0][4] = check
+        check.board[3][4] = WhiteRook.new([3, 4], board)
+        expected_output = false
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[0][4] = check
+        check.board[3][4] = BlackRook.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[0][4] = check
+        check.board[3][4] = BlackQueen.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_up?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([7, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[7][4] = check
+        expected_output = false
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[7][4] = check
+        check.board[3][4] = WhiteRook.new([3, 4], board)
+        expected_output = false
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[7][4] = check
+        check.board[3][4] = BlackRook.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[7][4] = check
+        check.board[3][4] = BlackQueen.new([3, 4], board)
+        expected_output = true
+        expect(check.in_check_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([3, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[3][4] = check
+        expected_output = false
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[3][4] = check
+        check.board[3][0] = WhiteRook.new([3, 0], board)
+        expected_output = false
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[3][4] = check
+        check.board[3][0] = BlackRook.new([3, 0], board)
+        expected_output = true
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[3][4] = check
+        check.board[3][0] = BlackQueen.new([3, 0], board)
+        expected_output = true
+        expect(check.in_check_right?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left?' do
+    context 'when in_check_vertical? is called' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([3, 4], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[3][4] = check
+        expected_output = false
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[3][4] = check
+        check.board[3][7] = WhiteRook.new([3, 7], board)
+        expected_output = false
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent rook' do
+        check.board[3][4] = check
+        check.board[3][7] = BlackRook.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[3][4] = check
+        check.board[3][7] = BlackQueen.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_left?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right_down?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[6][4] = WhiteBishop.new([6, 4], board)
+        expected_output = false
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[6][4] = BlackBishop.new([6, 4], board)
+        expected_output = true
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[6][4] = BlackQueen.new([6, 4], board)
+        expected_output = true
+        expect(check.in_check_right_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_right_up?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[4][4] = WhiteBishop.new([4, 4], board)
+        expected_output = false
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[4][4] = nil
+        check.board[2][2] = BlackBishop.new([2, 2], board)
+        expected_output = true
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[4][4] = BlackQueen.new([4, 4], board)
+        expected_output = true
+        expect(check.in_check_right_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left_down?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[7][7] = WhiteBishop.new([7, 7], board)
+        expected_output = false
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[7][7] = BlackBishop.new([7, 7], board)
+        expected_output = true
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[7][7] = BlackQueen.new([7, 7], board)
+        expected_output = true
+        expect(check.in_check_left_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_check_left_up?' do
+    context 'when in_check_diagonal?' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([5, 5], board) }
+
+      it 'returns false when path is not blocked' do
+        check.board[5][5] = check
+        expected_output = false
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns false when path is blocked by same color piece' do
+        check.board[5][5] = check
+        check.board[4][6] = WhiteBishop.new([4, 6], board)
+        expected_output = false
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent bishop' do
+        check.board[5][5] = check
+        check.board[4][6] = nil
+        check.board[3][7] = BlackBishop.new([3, 7], board)
+        expected_output = true
+        expect(check.in_check_left_up?).to eql(expected_output)
+      end
+
+      it 'returns true when path is blocked by opponent queen' do
+        check.board[5][5] = check
+        check.board[4][6] = BlackQueen.new([4, 6], board)
+        expected_output = true
+        expect(check.in_check_left_up?).to eql(expected_output)
       end
     end
   end

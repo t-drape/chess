@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require_relative './rook'
+require_relative './queen'
+require_relative './pawn'
+require_relative './bishop'
+require_relative './knight'
 
 # A model of a Black King in Chess
 class BlackKing
@@ -60,6 +64,122 @@ class BlackKing
     normal.each { |e| moves << e } unless normal.empty?
     castles.each { |e| moves << e } unless castles.empty?
     moves
+  end
+
+  def in_check?
+    in_check_vertical? || in_check_horizontal? || in_check_diagonal?
+  end
+
+  def in_check_vertical?
+    in_check_up? || in_check_down?
+  end
+
+  def in_check_up?
+    y = @pos[0]
+    while y < 7
+      y += 1
+      unless @board[y][@pos[1]].nil?
+        break if @board[y][@pos[1]].color == @color
+        return true if @board[y][@pos[1]].is_a?(WhiteRook) || @board[y][@pos[1]].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_down?
+    y = @pos[0]
+    while y.positive?
+      y -= 1
+      unless @board[y][@pos[1]].nil?
+        break if @board[y][@pos[1]].color == @color
+        return true if @board[y][@pos[1]].is_a?(WhiteRook) || @board[y][@pos[1]].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_horizontal?
+    in_check_left? || in_check_right?
+  end
+
+  def in_check_left?
+    x = @pos[1]
+    while x.positive?
+      x -= 1
+      unless @board[@pos[0]][x].nil?
+        break if @board[@pos[0]][x].color == @color
+        return true if @board[@pos[0]][x].is_a?(WhiteRook) || @board[@pos[0]][x].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_right?
+    x = @pos[1]
+    while x < 7
+      x += 1
+      unless @board[@pos[0]][x].nil?
+        break if @board[@pos[0]][x].color == @color
+        return true if @board[@pos[0]][x].is_a?(WhiteRook) || @board[@pos[0]][x].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_diagonal?
+    in_check_left_up? || in_check_left_down? || in_check_right_up? || in_check_right_down?
+  end
+
+  def in_check_left_up?
+    y, x = @pos
+    while y < 7 && x.positive?
+      y += 1
+      x -= 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(WhiteBishop) || @board[y][x].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_left_down?
+    y, x = @pos
+    while y.positive? && x.positive?
+      y -= 1
+      x -= 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(WhiteBishop) || @board[y][x].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_right_up?
+    y, x = @pos
+    while y < 7 && x < 7
+      y += 1
+      x += 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(WhiteBishop) || @board[y][x].is_a?(WhiteQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_right_down?
+    y, x = @pos
+    while y.positive? && x < 7
+      y -= 1
+      x += 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(WhiteBishop) || @board[y][x].is_a?(WhiteQueen)
+      end
+    end
+    false
   end
 end
 
@@ -121,5 +241,121 @@ class WhiteKing
     normal.each { |e| moves << e } unless normal.empty?
     castles.each { |e| moves << e } unless castles.empty?
     moves
+  end
+
+  def in_check?
+    in_check_vertical? || in_check_horizontal? || in_check_diagonal?
+  end
+
+  def in_check_vertical?
+    in_check_up? || in_check_down?
+  end
+
+  def in_check_up?
+    y = @pos[0]
+    while y.positive?
+      y -= 1
+      unless @board[y][@pos[1]].nil?
+        break if @board[y][@pos[1]].color == @color
+        return true if @board[y][@pos[1]].is_a?(BlackRook) || @board[y][@pos[1]].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_down?
+    y = @pos[0]
+    while y < 7
+      y += 1
+      unless @board[y][@pos[1]].nil?
+        break if @board[y][@pos[1]].color == @color
+        return true if @board[y][@pos[1]].is_a?(BlackRook) || @board[y][@pos[1]].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_horizontal?
+    in_check_left? || in_check_right?
+  end
+
+  def in_check_left?
+    x = @pos[1]
+    while x < 7
+      x += 1
+      unless @board[@pos[0]][x].nil?
+        break if @board[@pos[0]][x].color == @color
+        return true if @board[@pos[0]][x].is_a?(BlackRook) || @board[@pos[0]][x].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_right?
+    x = @pos[1]
+    while x.positive?
+      x -= 1
+      unless @board[@pos[0]][x].nil?
+        break if @board[@pos[0]][x].color == @color
+        return true if @board[@pos[0]][x].is_a?(BlackRook) || @board[@pos[0]][x].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_diagonal?
+    in_check_left_up? || in_check_left_down? || in_check_right_up? || in_check_right_down?
+  end
+
+  def in_check_right_down?
+    y, x = @pos
+    while y < 7 && x.positive?
+      y += 1
+      x -= 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(BlackBishop) || @board[y][x].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_right_up?
+    y, x = @pos
+    while y.positive? && x.positive?
+      y -= 1
+      x -= 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(BlackBishop) || @board[y][x].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_left_down?
+    y, x = @pos
+    while y < 7 && x < 7
+      y += 1
+      x += 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(BlackBishop) || @board[y][x].is_a?(BlackQueen)
+      end
+    end
+    false
+  end
+
+  def in_check_left_up?
+    y, x = @pos
+    while y.positive? && x < 7
+      y -= 1
+      x += 1
+      unless @board[y][x].nil?
+        break if @board[y][x].color == @color
+        return true if @board[y][x].is_a?(BlackBishop) || @board[y][x].is_a?(BlackQueen)
+      end
+    end
+    false
   end
 end
