@@ -190,7 +190,8 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
       before do
         allow(check).to receive(:in_check_vertical?).and_return(false)
         allow(check).to receive(:in_check_horizontal?).and_return(false)
-        allow(check).to receive(:in_check_diagonal?).and_return(true)
+        allow(check).to receive(:in_check_diagonal?).and_return(false)
+        allow(check).to receive(:special_checks?).and_return(true)
       end
 
       it 'calls in_check_vertical? once' do
@@ -206,6 +207,11 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
 
       it 'calls in_check_diagonal? once' do
         expect(check).to receive(:in_check_diagonal?).once
+        check.in_check?
+      end
+
+      it 'calls special_checks? once' do
+        expect(check).to receive(:special_checks?).once
         check.in_check?
       end
 
@@ -670,6 +676,135 @@ describe BlackKing do # rubocop:disable Metrics/BlockLength
         check.board[4][6] = WhiteQueen.new([4, 6], board)
         expected_output = true
         expect(check.in_check_right_down?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#special_checks?' do
+    context 'when in_check? is called' do
+      subject(:check) { described_class.new(nil, nil) }
+
+      before do
+        allow(check).to receive(:in_pawn_check?).and_return(false)
+        allow(check).to receive(:in_knight_check?).and_return(true)
+      end
+
+      it 'calls in_pawn_check? once' do
+        expect(check).to receive(:in_pawn_check?).once
+        check.special_checks?
+      end
+
+      it 'calls in_knight_check? once' do
+        expect(check).to receive(:in_knight_check?).once
+        check.special_checks?
+      end
+    end
+  end
+
+  describe '#in_pawn_check?' do
+    context 'when a king is tested for check' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([0, 4], board) }
+
+      it 'returns false if no pawns present' do
+        check.board[0][4] = check
+        expected_output = false
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+
+      it 'returns true if checked by pawn, diagonal to right' do
+        check.board[0][4] = check
+        check.board[1][3] = WhitePawn.new([1, 3], board, nil)
+        expected_output = true
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+
+      it 'returns true if checked by pawn, diagonal to left' do
+        check.board[1][3] = nil
+        check.board[1][5] = WhitePawn.new([1, 5], board, nil)
+        expected_output = true
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_knight_check?' do
+    context 'when a king is tested for check' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([4, 3], board) }
+
+      it 'returns false if no knight(s) present' do
+        check.board[4][3] = check
+        expected_output = false
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 2, x + 1' do
+        check.board[2][4] = WhiteKnight.new([2, 4], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 2, x - 1' do
+        check.board[2][4] = nil
+        check.board[2][2] = WhiteKnight.new([2, 2], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 1, x + 2' do
+        check.board[2][2] = nil
+        check.board[3][5] = WhiteKnight.new([3, 5], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y - 1, x - 2' do
+        check.board[3][5] = nil
+        check.board[3][1] = WhiteKnight.new([3, 1], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 1, x + 2' do
+        check.board[3][1] = nil
+        check.board[5][5] = WhiteKnight.new([5, 5], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 1, x - 2' do
+        check.board[5][5] = nil
+        check.board[5][1] = WhiteKnight.new([5, 1], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 2, x + 1' do
+        check.board[5][1] = nil
+        check.board[6][4] = WhiteKnight.new([6, 4], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 2, x - 1' do
+        check.board[6][4] = nil
+        check.board[6][2] = WhiteKnight.new([6, 2], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
       end
     end
   end
@@ -1338,6 +1473,135 @@ describe WhiteKing do # rubocop:disable Metrics/BlockLength
         check.board[4][6] = BlackQueen.new([4, 6], board)
         expected_output = true
         expect(check.in_check_left_up?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#special_checks?' do
+    context 'when in_check? is called' do
+      subject(:check) { described_class.new(nil, nil) }
+
+      before do
+        allow(check).to receive(:in_pawn_check?).and_return(false)
+        allow(check).to receive(:in_knight_check?).and_return(true)
+      end
+
+      it 'calls in_pawn_check? once' do
+        expect(check).to receive(:in_pawn_check?).once
+        check.special_checks?
+      end
+
+      it 'calls in_knight_check? once' do
+        expect(check).to receive(:in_knight_check?).once
+        check.special_checks?
+      end
+    end
+  end
+
+  describe '#in_pawn_check?' do
+    context 'when a king is tested for check' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([7, 4], board) }
+
+      it 'returns false if no pawns present' do
+        check.board[7][4] = check
+        expected_output = false
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+
+      it 'returns true if checked by pawn, diagonal to left' do
+        check.board[7][4] = check
+        check.board[6][3] = BlackPawn.new([6, 3], board, nil)
+        expected_output = true
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+
+      it 'returns true if checked by pawn, diagonal to right' do
+        check.board[6][3] = nil
+        check.board[6][5] = BlackPawn.new([6, 5], board, nil)
+        expected_output = true
+        expect(check.in_pawn_check?).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#in_knight_check?' do
+    context 'when a king is tested for check' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:check) { described_class.new([4, 3], board) }
+
+      it 'returns false if no knight(s) present' do
+        check.board[4][3] = check
+        expected_output = false
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 2, x + 1' do
+        check.board[2][4] = BlackKnight.new([2, 4], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 2, x - 1' do
+        check.board[2][4] = nil
+        check.board[2][2] = BlackKnight.new([2, 2], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+      it 'returns true if king in check by knight y - 1, x + 2' do
+        check.board[2][2] = nil
+        check.board[3][5] = BlackKnight.new([3, 5], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y - 1, x - 2' do
+        check.board[3][5] = nil
+        check.board[3][1] = BlackKnight.new([3, 1], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 1, x + 2' do
+        check.board[3][1] = nil
+        check.board[5][5] = BlackKnight.new([5, 5], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 1, x - 2' do
+        check.board[5][5] = nil
+        check.board[5][1] = BlackKnight.new([5, 1], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 2, x + 1' do
+        check.board[5][1] = nil
+        check.board[6][4] = BlackKnight.new([6, 4], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
+      end
+
+      it 'returns true if king in check by knight y + 2, x - 1' do
+        check.board[6][4] = nil
+        check.board[6][2] = BlackKnight.new([6, 2], board)
+        expected_output = true
+        expect(check.in_knight_check?).to eql(expected_output)
       end
     end
   end

@@ -67,7 +67,29 @@ class BlackKing
   end
 
   def in_check?
-    in_check_vertical? || in_check_horizontal? || in_check_diagonal?
+    in_check_vertical? || in_check_horizontal? || in_check_diagonal? || special_checks?
+  end
+
+  def special_checks?
+    in_pawn_check? || in_knight_check?
+  end
+
+  def in_pawn_check?
+    y = @pos[0] + 1
+    x_vals = [@pos[1] + 1, @pos[1] - 1]
+    x_vals.each do |x|
+      return true if !@board[y][x].nil? && @board[y][x].is_a?(WhitePawn)
+    end
+    false
+  end
+
+  def in_knight_check?
+    [[-2, 1], [-2, -1], [-1, 2], [-1, -2], [1, 2], [1, -2], [2, 1], [2, -1]].each do |move|
+      y = @pos[0] + move[0]
+      x = @pos[1] + move[1]
+      return true if !@board[y][x].nil? && @board[y][x].is_a?(WhiteKnight)
+    end
+    false
   end
 
   def in_check_vertical?
@@ -244,7 +266,29 @@ class WhiteKing
   end
 
   def in_check?
-    in_check_vertical? || in_check_horizontal? || in_check_diagonal?
+    in_check_vertical? || in_check_horizontal? || in_check_diagonal? || special_checks?
+  end
+
+  def special_checks?
+    in_pawn_check? || in_knight_check?
+  end
+
+  def in_pawn_check?
+    y = @pos[0] - 1
+    x_vals = [@pos[1] + 1, @pos[1] - 1]
+    x_vals.each do |x|
+      return true if !@board[y][x].nil? && @board[y][x].is_a?(BlackPawn)
+    end
+    false
+  end
+
+  def in_knight_check?
+    [[-2, 1], [-2, -1], [-1, 2], [-1, -2], [1, 2], [1, -2], [2, 1], [2, -1]].each do |move|
+      y = @pos[0] + move[0]
+      x = @pos[1] + move[1]
+      return true if !@board[y][x].nil? && @board[y][x].is_a?(BlackKnight)
+    end
+    false
   end
 
   def in_check_vertical?
