@@ -8,6 +8,44 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 
 describe Game do # rubocop:disable Metrics/BlockLength
+  describe '#check_message' do
+    context 'when a king is in check' do
+      subject(:check) { described_class.new }
+
+      it 'returns the correct message for a white king' do
+        message = "White king is in check!\n"
+        expect { check.check_message }.to output(message).to_stdout
+      end
+
+      it 'returns the correct message for a black king' do
+        check.change_player
+        message = "Black king is in check!\n"
+        expect { check.check_message }.to output(message).to_stdout
+      end
+    end
+  end
+
+  describe '#player_input_move' do
+    context 'when a round is played' do
+      subject(:getter) { described_class.new }
+      it 'gets the move from user' do
+        allow(getter).to receive(:gets).and_return('1,2')
+        expect(getter).to receive(:gets).once
+        getter.player_input_move
+      end
+
+      it 'returns an array' do
+        allow(getter).to receive(:gets).and_return('1,2')
+        expect(getter.player_input_move).to be_kind_of(Array)
+      end
+
+      it 'returns the correctly formatted output' do
+        allow(getter).to receive(:gets).and_return('1,2')
+        expected_output = [1, 2]
+        expect(getter.player_input_move).to eql(expected_output)
+      end
+    end
+  end
   describe '#change_player' do
     context 'when a round is over' do
       subject(:player_turn) { described_class.new }
@@ -232,23 +270,6 @@ describe Game do # rubocop:disable Metrics/BlockLength
         expect do
           new_piece.create_new_piece_white('queen', [0, 6])
         end.to change { new_piece.board[0][6].class }.from(WhitePawn).to(WhiteQueen)
-      end
-    end
-  end
-
-  describe '#check_message' do
-    context 'when a king is in check' do
-      subject(:check) { described_class.new }
-
-      it 'returns the correct message for a white king' do
-        message = "White king is in check!\n"
-        expect { check.check_message }.to output(message).to_stdout
-      end
-
-      it 'returns the correct message for a black king' do
-        check.change_player
-        message = "Black king is in check!\n"
-        expect { check.check_message }.to output(message).to_stdout
       end
     end
   end
