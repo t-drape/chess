@@ -28,6 +28,16 @@ class Game
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
   def player_input_move
     move = gets.chomp.split(',').map(&:to_i)
+    move = player_input_move unless valid_move(move)
+    move
+  end
+
+  def valid_move(move)
+    return false if move.length != 2
+    return false unless (0..7).include?(move[0])
+    return false unless (0..7).include?(move[1])
+
+    true
   end
 
   def check_message
