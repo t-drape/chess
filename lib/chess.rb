@@ -25,6 +25,11 @@ class Game
     end
   end
 
+  def play_round
+    show_board
+    move = player_input_move
+  end
+
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
   def player_input_move
     move = gets.chomp.split(',').map(&:to_i)

@@ -8,6 +8,22 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 
 describe Game do # rubocop:disable Metrics/BlockLength
+  describe '#play_round' do
+    context 'when a round is started' do
+      subject(:round) { described_class.new }
+
+      it 'calls show_board once' do
+        expect(round).to receive(:show_board).once
+        round.play_round
+      end
+      it 'calls player_input_move once' do
+        allow(round).to receive(:show_board)
+        expect(round).to receive(:player_input_move).once
+        round.play_round
+      end
+    end
+  end
+
   describe '#check_message' do
     context 'when a king is in check' do
       subject(:check) { described_class.new }
