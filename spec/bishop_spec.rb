@@ -5,7 +5,7 @@ require_relative('./../lib/pieces/bishop')
 require_relative('./../lib/pieces/rook')
 
 describe BlackBishop do # rubocop:disable Metrics/BlockLength
-  describe '#moves' do # rubocop:disable Metrics/BlockLength
+  describe '#bishop_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a black bishop is called' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -27,19 +27,19 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
       it 'ca;;s moves_from_lowest once' do
         mover.board[3][3] = mover
         expect(mover).to receive(:moves_from_lowest).once
-        mover.moves
+        mover.bishop_moves
       end
 
       it 'calls moves_to_highest once' do
         expect(mover).to receive(:moves_to_highest)
-        mover.moves
+        mover.bishop_moves
       end
 
       it 'returns the correct_values' do
         expected_output = [[2, 4], [1, 5], [0, 6], [2, 2], [1, 1], [0, 0], [4, 4], [5, 5], [6, 6], [7, 7], [4, 3],
                            [3, 2], [2, 1], [1, 0]]
 
-        expect(mover.moves).to eql(expected_output)
+        expect(mover.bishop_moves).to eql(expected_output)
       end
     end
   end
@@ -293,17 +293,17 @@ describe WhiteBishop do # rubocop:disable Metrics/BlockLength
       it 'calls moves_from_lowest once' do
         mover.board[2][3] = mover
         expect(mover).to receive(:moves_from_lowest).once
-        mover.moves
+        mover.bishop_moves
       end
 
       it 'calls moves_to_highest once' do
         expect(mover).to receive(:moves_to_highest).once
-        mover.moves
+        mover.bishop_moves
       end
 
       it 'returns the correct values' do
         expected_output = [[3, 2], [4, 1], [5, 0], [3, 4], [4, 5], [5, 6], [6, 7], [6, 2], [7, 1], [6, 4], [7, 5]]
-        expect(mover.moves).to eql(expected_output)
+        expect(mover.bishop_moves).to eql(expected_output)
       end
     end
   end

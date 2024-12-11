@@ -26,21 +26,36 @@ class Game
   end
 
   def play_round
+    # Show board on each round
     show_board
-    move = player_input_move
+    # Get piece and move from user
+    move, piece = select_piece_and_move
+    # Update Board
+    # Update Piece Pos
+  end
+
+  def select_piece_and_move
+    piece = player_select_piece
+    [piece, player_input_move(piece)]
+  end
+
+  def player_select_piece
   end
 
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
-  def player_input_move
+  def player_input_move(piece)
     move = gets.chomp.split(',').map(&:to_i)
-    move = player_input_move unless valid_move(move)
+    move = player_input_move(piece) unless valid_move(piece, move)
     move
   end
 
-  def valid_move(move)
+  def valid_move(piece, move)
     return false if move.length != 2
     return false unless (0..7).include?(move[0])
     return false unless (0..7).include?(move[1])
+    return false unless piece.
+
+    # Make sure move is in piece available moves!
 
     true
   end

@@ -21,7 +21,7 @@ class BlackQueen
   def full_moves
     return_moves = []
     rook = normal_moves
-    bishop = moves
+    bishop = bishop_moves
     rook.each { |e| return_moves << e } unless rook.nil? || rook.empty?
     bishop.each { |e| return_moves << e } unless bishop.nil? || bishop.empty?
     return_moves

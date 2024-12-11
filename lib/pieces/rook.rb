@@ -15,7 +15,7 @@ class BlackRook
     @on_opening = true
   end
 
-  def moves
+  def rook_moves
     moves = []
     normal = normal_moves
     castles = castling
