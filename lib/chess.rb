@@ -35,6 +35,7 @@ class Game
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Check for stalemate
+    # stalemate
   end
 
   def update_board(piece, move)
@@ -52,6 +53,20 @@ class Game
   end
 
   def player_select_piece
+    piece = gets.chomp.split(',').map(&:to_i)
+    piece = player_select_piece unless valid_input(piece)
+    @board[piece[0]][piece[1]]
+  end
+
+  def valid_input(piece)
+    return false if piece.length != 2
+
+    piece = @board[piece[0]][piece[1]]
+    return false if piece.nil?
+    # If Current player pieces includes piece instead!!
+    return false if piece.color != @current_player
+
+    true
   end
 
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
