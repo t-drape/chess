@@ -31,13 +31,19 @@ class Game
     # Get piece and move from user
     piece, move = select_piece_and_move
     # Update Board
+    update_board(piece, move)
+    # Check if move initiated check
+    # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
+    # Check for stalemate
+  end
+
+  def update_board(piece, move)
+    # Update Board
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
     # Update Piece Pos
     piece.pos = move
-    # Check if move initiated check
-    # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
   end
 
   def select_piece_and_move

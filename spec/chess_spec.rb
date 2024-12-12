@@ -8,8 +8,8 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 
 describe Game do # rubocop:disable Metrics/BlockLength
-  describe '#play_round' do
-    context 'when a round is started' do
+  describe '#play_round' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -37,6 +37,42 @@ describe Game do # rubocop:disable Metrics/BlockLength
       it 'calls select_piece_and_move once' do
         expect(round).to receive(:select_piece_and_move).once
         round.play_round
+      end
+
+      it 'calls update_board once' do
+        expect(round).to receive(:update_board).once
+        round.play_round
+      end
+    end
+  end
+
+  describe '#update_board' do
+    context 'when a round finishes' do
+      board_before = [[nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil],
+                      [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:update) { described_class.new }
+      let(:piece) { BlackRook.new([1, 2], board_before) }
+
+      it 'updates the board to reflect the new move' do
+        update.board = board_before
+        expect { update.update_board(piece, [0, 2]) }.to change { update.board[0][2] }.from(nil).to(piece)
+      end
+
+      it 'removes the last position of the piece' do
+        update.board = board_before
+        update.board[1][2] = piece
+        expect { update.update_board(piece, [0, 2]) }.to change { update.board[1][2] }.from(piece).to(nil)
+      end
+
+      it 'changes the pos of the piece' do
+        expect { update.update_board(piece, [0, 2]) }.to change { piece.pos }.from([1, 2]).to([0, 2])
       end
     end
   end
