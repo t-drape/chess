@@ -12,6 +12,14 @@ class BlackPawn
     @last_move = last_move
   end
 
+  def moves
+    moves = []
+    moves += @opener ? opening_moves : non_opening_moves
+    moves += en_passant
+    moves += capture_moves
+    moves
+  end
+
   def opening_moves
     moves = []
     [1, 2].each do |vert_add|
@@ -75,6 +83,14 @@ class WhitePawn
     @opener = @pos[0] == 6
     @board = board
     @last_move = last_move
+  end
+
+  def moves
+    moves = []
+    moves += @opener ? opening_moves : non_opening_moves
+    moves += en_passant
+    moves += capture_moves
+    moves
   end
 
   def opening_moves

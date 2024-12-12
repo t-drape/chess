@@ -15,6 +15,47 @@ describe BlackPawn do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is played' do # rubocop:disable Metrics/BlockLength
+      subject(:mover) { described_class.new([0, 2], nil, nil) }
+
+      before do
+        allow(mover).to receive(:opening_moves).and_return([[1, 2]])
+        allow(mover).to receive(:non_opening_moves).and_return([])
+        allow(mover).to receive(:en_passant).and_return([[2, 3], [2, 0]])
+        allow(mover).to receive(:capture_moves).and_return([])
+      end
+
+      it 'calls opening_moves once if @opener is true' do
+        mover.opener = true
+        expect(mover).to receive(:opening_moves).once
+        mover.moves
+      end
+
+      it 'calls non_opening_moves if @opener is false' do
+        mover.opener = false
+        expect(mover).to receive(:non_opening_moves).once
+        mover.moves
+      end
+
+      it 'calls en_passant once' do
+        expect(mover).to receive(:en_passant).once
+        mover.moves
+      end
+
+      it 'calls capture_moves once' do
+        expect(mover).to receive(:capture_moves).once
+        mover.moves
+      end
+
+      it 'returns the correct values' do
+        mover.opener = true
+        expected_output = [[1, 2], [2, 3], [2, 0]]
+        expect(mover.moves).to eql(expected_output)
+      end
+    end
+  end
+
   describe '#opening_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a pawn is on its opening square' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
@@ -179,6 +220,47 @@ describe WhitePawn do # rubocop:disable Metrics/BlockLength
 
       it 'returns false if row num is less than 6' do
         expect(described_class.new([4, 0], nil, nil).opener).to be false
+      end
+    end
+  end
+
+  describe '#moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is played' do # rubocop:disable Metrics/BlockLength
+      subject(:mover) { described_class.new([0, 2], nil, nil) }
+
+      before do
+        allow(mover).to receive(:opening_moves).and_return([[1, 2]])
+        allow(mover).to receive(:non_opening_moves).and_return([])
+        allow(mover).to receive(:en_passant).and_return([[2, 3], [2, 0]])
+        allow(mover).to receive(:capture_moves).and_return([])
+      end
+
+      it 'calls opening_moves once if @opener is true' do
+        mover.opener = true
+        expect(mover).to receive(:opening_moves).once
+        mover.moves
+      end
+
+      it 'calls non_opening_moves if @opener is false' do
+        mover.opener = false
+        expect(mover).to receive(:non_opening_moves).once
+        mover.moves
+      end
+
+      it 'calls en_passant once' do
+        expect(mover).to receive(:en_passant).once
+        mover.moves
+      end
+
+      it 'calls capture_moves once' do
+        expect(mover).to receive(:capture_moves).once
+        mover.moves
+      end
+
+      it 'returns the correct values' do
+        mover.opener = true
+        expected_output = [[1, 2], [2, 3], [2, 0]]
+        expect(mover.moves).to eql(expected_output)
       end
     end
   end
