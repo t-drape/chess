@@ -85,13 +85,13 @@ describe Game do # rubocop:disable Metrics/BlockLength
       subject(:check) { described_class.new }
 
       it 'returns the correct message for a white king' do
-        message = "White king is in check!\n"
+        message = "Black king is in check!\n"
         expect { check.check_message }.to output(message).to_stdout
       end
 
       it 'returns the correct message for a black king' do
         check.change_player
-        message = "Black king is in check!\n"
+        message = "White king is in check!\n"
         expect { check.check_message }.to output(message).to_stdout
       end
     end

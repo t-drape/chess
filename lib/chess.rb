@@ -29,9 +29,13 @@ class Game
     # Show board on each round
     show_board
     # Get piece and move from user
-    move, piece = select_piece_and_move
+    piece, move = select_piece_and_move
     # Update Board
+    @board[move[0]][move[1]] = piece
     # Update Piece Pos
+    piece.pos = move
+    # Check if move initiated check
+    check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
   end
 
   def select_piece_and_move
@@ -61,7 +65,11 @@ class Game
   end
 
   def check_message
-    puts "#{@current_player.capitalize} king is in check!"
+    if @current_player == @player_one
+      puts "#{@player_two.capitalize} king is in check!"
+    else
+      puts "#{@player_one.capitalize} king is in check!"
+    end
   end
 
   def change_player
