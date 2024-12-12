@@ -2,7 +2,7 @@
 
 # A model for a Black Knight in Chess
 class BlackKnight
-  attr_accessor :color, :board
+  attr_accessor :color, :board, :pos
 
   def initialize(pos, board)
     @color = 'black'
@@ -44,7 +44,7 @@ end
 
 # A model for a White Knight in Chess
 class WhiteKnight
-  attr_accessor :color, :board
+  attr_accessor :color, :board, :pos
 
   def initialize(pos, board)
     @color = 'white'

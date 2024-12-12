@@ -10,7 +10,7 @@ class BlackQueen
 
   include BlackBishopMovement
 
-  attr_accessor :board, :color
+  attr_accessor :board, :color, :pos
 
   def initialize(pos, board)
     @color = 'black'
@@ -34,7 +34,7 @@ class WhiteQueen
 
   include WhiteBishopMovement
 
-  attr_accessor :board, :color
+  attr_accessor :board, :color, :pos
 
   def initialize(pos, board)
     @color = 'white'

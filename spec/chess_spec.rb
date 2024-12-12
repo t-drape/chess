@@ -10,12 +10,23 @@ require_relative('./../lib/pieces/queen')
 describe Game do # rubocop:disable Metrics/BlockLength
   describe '#play_round' do
     context 'when a round is started' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
       subject(:round) { described_class.new }
+      let(:piece) { BlackRook.new([1, 2], board) }
 
       before do
+        round.board = board
+        round.board[1][2] = piece
         allow(round).to receive(:show_board)
-        allow(round).to receive(:player_select_piece)
-        allow(round).to receive(:player_input_move)
+        allow(round).to receive(:select_piece_and_move).and_return([piece, [1, 3]])
       end
 
       it 'calls show_board once' do
@@ -25,16 +36,6 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
       it 'calls select_piece_and_move once' do
         expect(round).to receive(:select_piece_and_move).once
-        round.play_round
-      end
-
-      it 'calls player_select_piece once' do
-        expect(round).to receive(:player_select_piece).once
-        round.play_round
-      end
-
-      it 'calls player_input_move once' do
-        expect(round).to receive(:player_input_move).once
         round.play_round
       end
     end
@@ -55,7 +56,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       let(:piece) { BlackRook.new([1, 2], board) }
 
       before do
-        allow(selected).to receive(:player_select_piece).and_return([1, 2])
+        allow(selected).to receive(:player_select_piece).and_return(piece)
         allow(selected).to receive(:player_input_move).and_return([0, 2])
       end
 
@@ -74,7 +75,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
 
       it 'returns the correct order' do
-        expected_output = [[1, 2], [0, 2]]
+        expected_output = [piece, [0, 2]]
         expect(selected.select_piece_and_move).to eql(expected_output)
       end
     end
