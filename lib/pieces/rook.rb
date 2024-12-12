@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative('./../modules/rook_moves')
+require_relative('./king')
 
 # A model of a Black Rook in Chess
 class BlackRook

@@ -12,25 +12,28 @@ describe Game do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do
       subject(:round) { described_class.new }
 
+      before do
+        allow(round).to receive(:show_board)
+        allow(round).to receive(:player_select_piece)
+        allow(round).to receive(:player_input_move)
+      end
+
       it 'calls show_board once' do
         expect(round).to receive(:show_board).once
         round.play_round
       end
 
       it 'calls select_piece_and_move once' do
-        allow(round).to receive(:show_board)
         expect(round).to receive(:select_piece_and_move).once
         round.play_round
       end
 
       it 'calls player_select_piece once' do
-        allow(round).to receive(:show_board)
         expect(round).to receive(:player_select_piece).once
         round.play_round
       end
 
       it 'calls player_input_move once' do
-        allow(round).to receive(:show_board)
         expect(round).to receive(:player_input_move).once
         round.play_round
       end
@@ -51,9 +54,12 @@ describe Game do # rubocop:disable Metrics/BlockLength
       subject(:selected) { described_class.new }
       let(:piece) { BlackRook.new([1, 2], board) }
 
-      it 'returns an array' do
+      before do
         allow(selected).to receive(:player_select_piece).and_return([1, 2])
         allow(selected).to receive(:player_input_move).and_return([0, 2])
+      end
+
+      it 'returns an array' do
         expect(selected.select_piece_and_move).to be_kind_of(Array)
       end
 
@@ -68,8 +74,6 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
 
       it 'returns the correct order' do
-        allow(selected).to receive(:player_select_piece).and_return([1, 2])
-        allow(selected).to receive(:player_input_move).and_return([0, 2])
         expected_output = [[1, 2], [0, 2]]
         expect(selected.select_piece_and_move).to eql(expected_output)
       end

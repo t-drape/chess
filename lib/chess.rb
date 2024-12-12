@@ -53,9 +53,9 @@ class Game
     return false if move.length != 2
     return false unless (0..7).include?(move[0])
     return false unless (0..7).include?(move[1])
-    return false unless piece.
+    return false unless piece.moves.include?(move)
 
-    # Make sure move is in piece available moves!
+    # Make sure move is in piece's available moves!
 
     true
   end
