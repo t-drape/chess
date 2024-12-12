@@ -5,6 +5,22 @@ require_relative('./../lib/pieces/bishop')
 require_relative('./../lib/pieces/rook')
 
 describe BlackBishop do # rubocop:disable Metrics/BlockLength
+  describe '#moves' do
+    context 'when a round calls moves' do
+      subject(:mover) { described_class.new([3, 3], nil) }
+      it 'calls bishop_moves once' do
+        expect(mover).to receive(:bishop_moves).once
+        mover.moves
+      end
+
+      it 'equals bishop_moves return value' do
+        allow(mover).to receive(:bishop_moves).and_return([0, 1])
+        expected_output = [0, 1]
+        expect(mover.moves).to eql(expected_output)
+      end
+    end
+  end
+
   describe '#bishop_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a black bishop is called' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
@@ -272,7 +288,23 @@ describe BlackBishop do # rubocop:disable Metrics/BlockLength
 end
 
 describe WhiteBishop do # rubocop:disable Metrics/BlockLength
-  describe '#moves' do # rubocop:disable Metrics/BlockLength
+  describe '#moves' do
+    context 'when a round calls moves' do
+      subject(:mover) { described_class.new([3, 3], nil) }
+      it 'calls bishop_moves once' do
+        expect(mover).to receive(:bishop_moves).once
+        mover.moves
+      end
+
+      it 'equals bishop_moves return value' do
+        allow(mover).to receive(:bishop_moves).and_return([0, 1])
+        expected_output = [0, 1]
+        expect(mover.moves).to eql(expected_output)
+      end
+    end
+  end
+
+  describe '#ull_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a white bishop is called' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],

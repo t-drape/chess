@@ -13,6 +13,10 @@ class BlackBishop
     @pos = pos
     @board = board
   end
+
+  def moves
+    bishop_moves
+  end
 end
 
 # A class to model a White Bishop in Chess
@@ -25,5 +29,9 @@ class WhiteBishop
     @color = 'white'
     @pos = pos
     @board = board
+  end
+
+  def moves
+    bishop_moves
   end
 end
