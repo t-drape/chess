@@ -36,6 +36,8 @@ class Game
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Check for stalemate
     # stalemate
+    # Ask for draw
+    # draw?
   end
 
   def update_board(piece, move)
