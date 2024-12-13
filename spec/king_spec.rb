@@ -10,7 +10,16 @@ require_relative './../lib/pieces/knight'
 describe BlackKing do # rubocop:disable Metrics/BlockLength
   describe '#normal_moves' do
     context 'when a king is the selected piece' do
-      subject(:king_moves) { described_class.new([3, 3], nil) }
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:king_moves) { described_class.new([3, 3], board) }
       it 'returns an array' do
         expect(king_moves.normal_moves).to be_kind_of Array
       end
@@ -813,7 +822,16 @@ end
 describe WhiteKing do # rubocop:disable Metrics/BlockLength
   describe '#normal_moves' do
     context 'when a king is the selected piece' do
-      subject(:king_moves) { described_class.new([3, 3], nil) }
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:king_moves) { described_class.new([3, 3], board) }
       it 'returns an array' do
         expect(king_moves.normal_moves).to be_kind_of Array
       end
