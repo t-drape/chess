@@ -119,7 +119,7 @@ class Game
     piece = @board[piece[0]][piece[1]]
     return false if piece.nil?
     # If Current player pieces includes piece instead!!
-    return false if piece.color != @current_player
+    return false if piece.color != @current_player.color
 
     true
   end
@@ -145,9 +145,9 @@ class Game
 
   def check_message
     if @current_player == @player_one
-      puts "#{@player_two.capitalize} king is in check!"
+      puts "#{@player_two.color.capitalize} king is in check!"
     else
-      puts "#{@player_one.capitalize} king is in check!"
+      puts "#{@player_one.color.capitalize} king is in check!"
     end
   end
 

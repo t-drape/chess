@@ -8,7 +8,7 @@ require_relative('./../lib/pieces/queen')
 
 # A class to model a chess player
 class BlackPlayer
-  attr_accessor :pieces, :pawns, :non_pawns, :board
+  attr_accessor :pieces, :pawns, :non_pawns, :board, :color
 
   def initialize(board)
     @color = 'black'
@@ -63,7 +63,7 @@ class BlackPlayer
 end
 
 class WhitePlayer
-  attr_accessor :pieces, :pawns, :non_pawns, :board
+  attr_accessor :pieces, :pawns, :non_pawns, :board, :color
 
   def initialize(board)
     @color = 'white'

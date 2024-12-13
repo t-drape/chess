@@ -330,14 +330,14 @@ describe Game do # rubocop:disable Metrics/BlockLength
       it 'changes the player from player one to player two' do
         expect { player_turn.change_player }.to change {
           player_turn.instance_variable_get(:@current_player)
-        }.from('white').to('black')
+        }.from(WhitePlayer).to(BlackPlayer)
       end
 
       it 'changes the player from player two to player one' do
         player_turn.change_player
         expect { player_turn.change_player }.to change {
           player_turn.instance_variable_get(:@current_player)
-        }.from('black').to('white')
+        }.from(BlackPlayer).to(WhitePlayer)
       end
     end
   end
