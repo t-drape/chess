@@ -12,14 +12,14 @@ class Game
     @winner = nil
     @player_one = WhitePlayer.new(@board)
     @player_two = BlackPlayer.new(@board)
-    @board = [@player_one.non_pawns,
+    @board = [@player_two.non_pawns,
+              @player_two.pawns,
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
               @player_one.pawns,
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil]]
+              @player_one.non_pawns]
     @current_player = @player_one
   end
 
@@ -93,7 +93,7 @@ class Game
     play_round
   end
 
-  def update_board(old_board, piece, move)
+  def update_board(piece, move)
     # Update Board
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
@@ -211,7 +211,3 @@ class Game
     end
   end
 end
-
-x = Game.new
-
-x.show_board

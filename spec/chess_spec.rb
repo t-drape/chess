@@ -160,8 +160,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#valid_input' do
-    context 'when a player selects a piece' do
+  describe '#valid_input' do # rubocop:disable Metrics/BlockLength
+    context 'when a player selects a piece' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
