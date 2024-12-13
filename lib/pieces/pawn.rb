@@ -2,7 +2,7 @@
 
 # A class to model a black pawn in chess
 class BlackPawn
-  attr_accessor :color, :board, :opener, :pos
+  attr_accessor :color, :board, :opener, :pos, :last_move
 
   def initialize(pos, board, last_move)
     @color = 'black'

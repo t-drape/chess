@@ -47,6 +47,7 @@ class Game
 
   # End game check
   # Checkmate:
+  # @current_player.king.in_check?
   # @current_player.all_moves_lead_to_check
   # end_message(@other_player)
   # Stalemate:
