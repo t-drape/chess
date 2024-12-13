@@ -51,7 +51,7 @@ describe BlackPlayer do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe 'legal_moves' do
+  describe 'legal_moves' do # rubocop:disable Metrics/BlockLength
     context 'when a round is played' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -72,7 +72,7 @@ describe BlackPlayer do # rubocop:disable Metrics/BlockLength
       end
     end
 
-    context 'when a player is in more realistic, complex situations' do
+    context 'when a player is in more realistic, complex situations' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
