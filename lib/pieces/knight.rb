@@ -75,7 +75,10 @@ class WhiteKnight
     board_range = (0..7)
     moves = []
     [[-2, -1], [-1, -2], [1, -2], [2, -1]].each do |y, x|
-      moves << [@pos[0] + y, @pos[1] + x] if board_range.include?(@pos[0] + y) && board_range.include?(@pos[1] + x)
+      if board_range.include?(@pos[0] + y) && board_range.include?(@pos[1] + x) && @board[@pos[0] + y][@pos[1] + x].nil?
+        moves << [@pos[0] + y,
+                  @pos[1] + x]
+      end
     end
     moves
   end
@@ -84,7 +87,10 @@ class WhiteKnight
     board_range = (0..7)
     moves = []
     [[-2, 1], [-1, 2], [1, 2], [2, 1]].each do |y, x|
-      moves << [@pos[0] + y, @pos[1] + x] if board_range.include?(@pos[0] + y) && board_range.include?(@pos[1] + x)
+      if board_range.include?(@pos[0] + y) && board_range.include?(@pos[1] + x) && @board[@pos[0] + y][@pos[1] + x].nil?
+        moves << [@pos[0] + y,
+                  @pos[1] + x]
+      end
     end
     moves
   end

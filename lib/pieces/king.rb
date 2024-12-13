@@ -89,7 +89,8 @@ class BlackKing
     [[-2, 1], [-2, -1], [-1, 2], [-1, -2], [1, 2], [1, -2], [2, 1], [2, -1]].each do |move|
       y = @pos[0] + move[0]
       x = @pos[1] + move[1]
-      return true if !@board[y][x].nil? && @board[y][x].is_a?(WhiteKnight)
+      board_range = (0..7)
+      return true if board_range.include?(x) && board_range.include?(y) && @board[y][x].is_a?(WhiteKnight)
     end
     false
   end
@@ -224,7 +225,9 @@ class WhiteKing
     @movements.each do |e|
       new_height = @pos[0] + e[0]
       new_width = @pos[1] + e[1]
-      moves << [new_height, new_width] if new_height.between?(0, 7) && new_width.between?(0, 7)
+      if new_height.between?(0, 7) && new_width.between?(0, 7) && @board[new_height][new_width].nil?
+        moves << [new_height, new_width]
+      end
     end
     moves
   end
@@ -288,7 +291,8 @@ class WhiteKing
     [[-2, 1], [-2, -1], [-1, 2], [-1, -2], [1, 2], [1, -2], [2, 1], [2, -1]].each do |move|
       y = @pos[0] + move[0]
       x = @pos[1] + move[1]
-      return true if !@board[y][x].nil? && @board[y][x].is_a?(BlackKnight)
+      board_range = (0..7)
+      return true if board_range.include?(x) && board_range.include?(y) && @board[y][x].is_a?(BlackKnight)
     end
     false
   end

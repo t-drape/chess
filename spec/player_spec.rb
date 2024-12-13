@@ -88,19 +88,12 @@ describe WhitePlayer do # rubocop:disable Metrics/BlockLength
 
       subject(:player) { described_class.new(board) }
 
-      it 'updates board' do
-        before = [nil, nil, nil, nil, nil, nil, nil, nil]
-        after = [WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn, WhitePawn]
-
-        expect { player.create_pawns(board) }.to change { board[6] }.from(before).to(after)
-      end
-
       it 'returns an array' do
-        expect(player.create_pawns(board)).to be_kind_of(Array)
+        expect(player.create_pawns).to be_kind_of(Array)
       end
 
       it 'returns an array of length 8' do
-        output = player.create_pawns(board)
+        output = player.create_pawns
         expect(output.length).to eql(8)
       end
     end
@@ -119,20 +112,35 @@ describe WhitePlayer do # rubocop:disable Metrics/BlockLength
 
       subject(:player) { described_class.new(board) }
 
-      it 'updates board' do
-        before = [nil, nil, nil, nil, nil, nil, nil, nil]
-        after = [WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen, WhiteKing, WhiteBishop, WhiteKnight, WhiteRook]
-
-        expect { player.create_non_pawns(board) }.to change { board[7] }.from(before).to(after)
-      end
-
       it 'returns an array' do
-        expect(player.create_non_pawns(board)).to be_kind_of(Array)
+        expect(player.create_non_pawns).to be_kind_of(Array)
       end
 
       it 'returns an array of length 8' do
-        output = player.create_non_pawns(board)
+        output = player.create_non_pawns
         expect(output.length).to eql(8)
+      end
+    end
+  end
+
+  describe 'legal_moves' do
+    context 'when a round is played' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:legal) { described_class.new(board) }
+      it 'returns all legal moves for the current player' do
+        legal.board[7] = legal.non_pawns
+        legal.board[6] = legal.pawns
+        expected_output = [[5, 0], [4, 0], [5, 1], [4, 1], [5, 2], [4, 2], [5, 3], [4, 3], [5, 4], [4, 4], [5, 5],
+                           [4, 5], [5, 6], [4, 6], [5, 7], [4, 7]]
+        expect(legal.legal_moves).to eql(expected_output)
       end
     end
   end
