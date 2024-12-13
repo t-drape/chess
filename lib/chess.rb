@@ -42,7 +42,8 @@ class Game
   # Use moves to determine if stalemate exists
   # all_moves == 0
 
-  # Helpful site, url: https://www.chessstrategyonline.com/content/tutorials/how-to-play-chess-draws#:~:text=Insufficient%20material,drawn%20due%20to%20insufficient%20material.
+  # Helpful site, url: https://www.chessstrategyonline.com/content/tutorials/how-to-play-chess-draws#:~:text=Insufficient%20material,drawn%20due%20to%20insufficient%20material
+  # Helpful site, url: https://gamedev.stackexchange.com/questions/194405/in-a-chess-simulator-how-to-efficiently-determine-checkmate
 
   # End game check
   # Checkmate:
@@ -64,6 +65,12 @@ class Game
   # "Do you also wish to draw? [Y/N]"
   # end_message(nil)
 
+  def end_game_check
+    # Checkmate
+    #
+    # Stalemate
+  end
+
   def play_round
     # Show board on each round
     show_board
@@ -71,8 +78,8 @@ class Game
     piece, move = select_piece_and_move
     # Update Board
     # If current king is in check
-    old_board = @board
-    old_pos = piece.pos
+    # old_board = @board
+    # old_pos = piece.pos
     update_board(piece, move)
     # Move must get King out of check, or keep King out of check
 
@@ -84,22 +91,30 @@ class Game
     # Update last move of each pawn
   end
 
-  def out_of_check(old_board, piece, old_pos)
-    return unless @current_player.king.in_check?
+  # def out_of_check(old_board, piece, old_pos)
+  #   return unless @current_player.king.in_check?
 
-    puts "Sorry! Your move must move the king out of harm's way..."
-    @board = old_board
-    piece.pos = old_pos
-    play_round
-  end
+  #   puts "Sorry! Your move must move the king out of harm's way..."
+  #   @board = old_board
+  #   piece.pos = old_pos
+  #   play_round
+  # end
 
   def update_board(piece, move)
     # Update Board
+    remove_capture_piece_from_player(move)
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
     # Update Piece Pos
     piece.pos = move
+  end
+
+  def remove_capture_piece_from_player(move)
+    return if @board[move[0]][move[1]].nil?
+
+    piece = @board[move[0]][move[1]]
+    @current_player == @player_one ? @player_two.remove(piece) : @player_one.remove(piece)
   end
 
   def select_piece_and_move
@@ -119,7 +134,7 @@ class Game
     piece = @board[piece[0]][piece[1]]
     return false if piece.nil?
     # If Current player pieces includes piece instead!!
-    return false if piece.color != @current_player.color
+    return false unless @current_player.pieces.include?(piece)
 
     true
   end
@@ -131,14 +146,14 @@ class Game
     move
   end
 
-  def valid_move(piece, move)
+  def valid_move(moves, piece, move)
     return false if move.length != 2
     return false unless (0..7).include?(move[0])
     return false unless (0..7).include?(move[1])
-    # If move is in current players all move
-    return false unless piece.moves.include?(move)
-
     # Make sure move is in piece's available moves!
+    return false unless piece.moves.include?(move)
+    # If move is in current players all move
+    return false unless moves.include?(move)
 
     true
   end
