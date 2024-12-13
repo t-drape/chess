@@ -75,7 +75,7 @@ end
 
 # A class to model a white pawn in chess
 class WhitePawn
-  attr_accessor :color, :board, :opener, :pos
+  attr_accessor :color, :board, :opener, :pos, :last_move
 
   def initialize(pos, board, last_move)
     @color = 'white'
