@@ -9,24 +9,24 @@ class Game
   attr_accessor :board
 
   def initialize
-    @player_one = WhitePlayer.new
-    @player_two = BlackPlayer.new
-    @current_player = @player_one
     @winner = nil
-    @board = [[@player_two.rook_one, @player_two.knight_one, @player_two.bishop_one, @player_two.king, @player_two.queen,
-               @player_two.bishop_two, @player_two.knight_two, @player_two.rook_two],
-              [@player_two.pawn_one, @player_two.pawn_two, @player_two.pawn_three, @player_two.pawn_four,
-               @player_two.pawn_five, @player_two.pawn_six, @player_two.pawn_seven, @player_two.pawn_eight],
-              [], [], [], [],
-              [@player_one.pawn_one, @player_one.pawn_two, @player_one.pawn_three, @player_one.pawn_four,
-               @player_one.pawn_five, @player_one.pawn_six, @player_one.pawn_seven, @player_one.pawn_eight],
-              [@player_one.rook_one, @player_one.knight_one, @player_one.bishop_one, @player_one.king,
-               @player_one.queen, @player_one.bishop_two, @player_one.knight_two, @player_one.rook_two]]
+    @board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+    @player_one = WhitePlayer.new(@board)
+    @player_two = BlackPlayer.new(@board)
+    @current_player = @player_one
   end
 
   def show_board
     @board.each do |index|
-      p index
+      puts index
     end
   end
 
@@ -210,3 +210,7 @@ class Game
     end
   end
 end
+
+x = Game.new
+
+x.show_board
