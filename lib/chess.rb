@@ -81,6 +81,7 @@ class Game
     # out_of_check(old_board)
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
+    # Update last move of each pawn
   end
 
   def out_of_check(old_board)
