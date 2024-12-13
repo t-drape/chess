@@ -41,7 +41,8 @@ class BlackPlayer
     moves = []
     king = @non_pawns[4]
     @pieces.each do |piece|
-      p piece if piece.nil?
+      next if piece.nil?
+
       piece_moves = piece.moves
       piece_moves.each do |move|
         old_pos = piece.pos

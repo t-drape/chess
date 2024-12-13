@@ -71,6 +71,43 @@ describe BlackPlayer do # rubocop:disable Metrics/BlockLength
         expect(legal.legal_moves).to eql(expected_output)
       end
     end
+
+    context 'when a player is in more realistic, complex situations' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:legal) { described_class.new(board) }
+
+      it 'returns empty array if player is in check and cannot move without check' do
+        expected_output = []
+        legal.pawns = [nil, nil, nil, WhiteRook.new([0, 0], legal.board), WhiteRook.new([0, 0], legal.board),
+                       WhiteRook.new([0, 0], legal.board), nil, nil]
+        legal.non_pawns = [nil, nil, nil, nil, BlackKing.new([7, 4], legal.board), nil, nil, nil]
+        legal.pieces = legal.pawns + legal.non_pawns
+        legal.board[7] = legal.non_pawns
+        legal.board[6] = legal.pawns
+        expect(legal.legal_moves).to eql(expected_output)
+      end
+
+      it 'returns empty array if player is not in check but cannot move due to check' do
+        expected_output = []
+        legal.pawns = [nil, nil, nil, nil, nil, nil, nil, nil]
+        legal.non_pawns = [nil, nil, nil, nil, BlackKing.new([6, 4], legal.board), nil, nil, nil]
+        legal.pieces = legal.pawns + legal.non_pawns
+        legal.board[5] = [nil, nil, nil, WhiteRook.new([0, 0], legal.board), nil, WhiteRook.new([0, 0], legal.board), nil,
+                          nil]
+        legal.board[6] = legal.non_pawns
+        legal.board[7] =
+          [nil, nil, nil, WhiteRook.new([0, 0], legal.board), nil, WhiteRook.new([0, 0], legal.board), nil, nil]
+        expect(legal.legal_moves).to eql(expected_output)
+      end
+    end
   end
 end
 
@@ -156,15 +193,27 @@ describe WhitePlayer do # rubocop:disable Metrics/BlockLength
 
       subject(:legal) { described_class.new(board) }
 
-      it 'returns empty array when player cannot move without check' do
+      it 'returns empty array if player is in check and cannot move without check' do
         expected_output = []
-        legal.pawns = [nil, nil, nil, WhiteRook.new([0, 0], legal.board), WhiteRook.new([0, 0], legal.board),
-                       WhiteRook.new([0, 0], legal.board), nil, nil]
-        legal.non_pawns = [nil, nil, nil, nil, BlackKing.new([7, 4], legal.board), nil, nil, nil]
+        legal.pawns = [nil, nil, nil, BlackRook.new([0, 0], legal.board), BlackRook.new([0, 0], legal.board),
+                       BlackRook.new([0, 0], legal.board), nil, nil]
+        legal.non_pawns = [nil, nil, nil, nil, WhiteKing.new([7, 4], legal.board), nil, nil, nil]
         legal.pieces = legal.pawns + legal.non_pawns
         legal.board[7] = legal.non_pawns
         legal.board[6] = legal.pawns
-        puts legal.board
+        expect(legal.legal_moves).to eql(expected_output)
+      end
+
+      it 'returns empty array if player is not in check but cannot move due to check' do
+        expected_output = []
+        legal.pawns = [nil, nil, nil, nil, nil, nil, nil, nil]
+        legal.non_pawns = [nil, nil, nil, nil, WhiteKing.new([6, 4], legal.board), nil, nil, nil]
+        legal.pieces = legal.pawns + legal.non_pawns
+        legal.board[5] = [nil, nil, nil, BlackRook.new([0, 0], legal.board), nil, BlackRook.new([0, 0], legal.board), nil,
+                          nil]
+        legal.board[6] = legal.non_pawns
+        legal.board[7] =
+          [nil, nil, nil, BlackRook.new([0, 0], legal.board), nil, BlackRook.new([0, 0], legal.board), nil, nil]
         expect(legal.legal_moves).to eql(expected_output)
       end
     end
