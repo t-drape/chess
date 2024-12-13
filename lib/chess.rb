@@ -10,17 +10,16 @@ class Game
 
   def initialize
     @winner = nil
-    @board = [[nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
+    @player_one = WhitePlayer.new(@board)
+    @player_two = BlackPlayer.new(@board)
+    @board = [@player_one.non_pawns,
+              @player_one.pawns,
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil]]
-
-    @player_one = WhitePlayer.new(@board)
-    @player_two = BlackPlayer.new(@board)
     @current_player = @player_one
   end
 
@@ -73,26 +72,28 @@ class Game
     # Update Board
     # If current king is in check
     old_board = @board
+    old_pos = piece.pos
     update_board(piece, move)
     # Move must get King out of check, or keep King out of check
 
     # UNCOMMENT WHEN PLAYERS ARE MODELED!!!
 
-    # out_of_check(old_board)
+    # out_of_check(old_board, piece, old_pos)
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Update last move of each pawn
   end
 
-  def out_of_check(old_board)
+  def out_of_check(old_board, piece, old_pos)
     return unless @current_player.king.in_check?
 
     puts "Sorry! Your move must move the king out of harm's way..."
     @board = old_board
+    piece.pos = old_pos
     play_round
   end
 
-  def update_board(piece, move)
+  def update_board(old_board, piece, move)
     # Update Board
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
