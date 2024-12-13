@@ -8,7 +8,7 @@ require_relative('./../lib/pieces/queen')
 
 # A class to model a chess player
 class BlackPlayer
-  attr_accessor :pieces, :pawns, :non_pawns
+  attr_accessor :pieces, :pawns, :non_pawns, :board
 
   def initialize(board)
     @color = 'black'
@@ -24,7 +24,6 @@ class BlackPlayer
       pawn = BlackPawn.new([1, t], @board, nil)
       pawns << pawn
     end
-    pawns.each { |e| e.board = @board }
     pawns
   end
 
@@ -35,24 +34,52 @@ class BlackPlayer
       piece = classes[index].new([0, x_pos], @board)
       non_pawns << piece
     end
-    non_pawns.each { |e| e.board = @board }
     non_pawns
   end
 
-  def legal_moves(board)
+  def legal_moves
     moves = []
-    puts @non_pawns[4]
+    king = @non_pawns[4]
     @pieces.each do |piece|
       piece_moves = piece.moves
       piece_moves.each do |move|
-        new_board = board
-        new_board[piece.pos[0]][piece.pos[1]] = nil
-        new_board[move[0]][move[1]] = piece
-        test_king = BlackKing.new(@non_pawns[4].pos, new_board)
-        moves << move unless test_king.in_check?
+        old_pos = piece.pos
+        old_spot = @board[move[0]][move[1]]
+        piece.pos = move
+        @board[old_pos[0]][old_pos[1]] = nil
+        @board[move[0]][move[1]] = piece
+        king.board = @board
+        moves << move unless king.in_check? || moves.include?(move)
+        piece.pos = old_pos
+        @board[move[0]][move[1]] = old_spot
+        @board[old_pos[0]][old_pos[1]] = piece
+        king.board = @board
+        # if piece.is_a?(BlackKing)
+        #   old_pos = @non_pawns[4].pos
+        #   old_spot = @board[move[0]][move[1]]
+        #   @non_pawns[4].pos = move
+        #   @non_pawn[4].board[old_pos[0]][old_pos[1]] = nil
+        #   @non_pawn[4].board[move[0]][move[1]] = piece
+        #   moves << move unless @non_pawns[4].in_check?
+        #   @non_pawns[4].pos = old_pos
+        #   @non_pawn[4].board[old_pos[0]][old_pos[1]] = @non_pawns[4]
+        #   @non_pawn[4].board[move[0]][move[1]] = old_spot
+        # end
+        # old_pos = piece.pos
+        # @board[old_pos[0]][old_pos[1]] = nil
+        # @board[move[0]][move[1]] = piece
+        # @non_pawns[4].board = @board
+        # if @non_pawns[4].in_check?
+
+        # else
+        #   moves << moves
+        # end
+        # @board[move[0]][move[1]] = nil
+        # @board[old_pos[0]][old_pos[1]] = piece
+        # @non_pawns[4].board = @board
       end
     end
-    moves.uniq
+    moves
   end
 end
 

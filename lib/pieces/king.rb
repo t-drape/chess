@@ -23,7 +23,9 @@ class BlackKing
     @movements.each do |e|
       new_height = @pos[0] + e[0]
       new_width = @pos[1] + e[1]
-      moves << [new_height, new_width] if new_height.between?(0, 7) && new_width.between?(0, 7)
+      if new_height.between?(0, 7) && new_width.between?(0, 7) && @board[new_height][new_width].nil?
+        moves << [new_height, new_width]
+      end
     end
     moves
   end
