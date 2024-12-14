@@ -191,9 +191,9 @@ class Game
 
     piece = @board[move[0]][move[1]]
     if @current_player == @player_one
-      piece.is_a?(BlackPawn) ? @player_two.pawns.delete(piece) : @player_two.non_pawns.delete(piece)
+      piece.is_a?(BlackPawn) ? @player_one.pawns.delete(piece) : @player_one.non_pawns.delete(piece)
     else
-      piece.is_a?(WhitePawn) ? @player_one.pawns.delete(piece) : @player_one.non_pawns.delete(piece)
+      piece.is_a?(WhitePawn) ? @player_two.pawns.delete(piece) : @player_two.non_pawns.delete(piece)
     end
   end
 
