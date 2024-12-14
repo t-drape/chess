@@ -2,9 +2,10 @@
 
 # A class to model a black pawn in chess
 class BlackPawn
-  attr_accessor :color, :board, :opener, :pos, :last_move
+  attr_accessor :color, :board, :opener, :pos, :last_move, :code
 
   def initialize(pos, board, last_move)
+    @code = "\u{265F}"
     @color = 'black'
     @pos = pos
     @opener = @pos[0] == 1
@@ -46,7 +47,7 @@ class BlackPawn
   end
 
   def non_opening_moves
-    [@pos[0] + 1, @pos[1]] if @board[@pos[0] + 1][@pos[1]].nil?
+    @board[@pos[0] + 1][@pos[1]].nil? ? [@pos[0] + 1, @pos[1]] : []
   end
 
   def en_passant_left
@@ -75,9 +76,10 @@ end
 
 # A class to model a white pawn in chess
 class WhitePawn
-  attr_accessor :color, :board, :opener, :pos, :last_move
+  attr_accessor :color, :board, :opener, :pos, :last_move, :code
 
   def initialize(pos, board, last_move)
+    @code = "\u{2659}"
     @color = 'white'
     @pos = pos
     @opener = @pos[0] == 6
@@ -99,7 +101,7 @@ class WhitePawn
       if @board[@pos[0] - vert_add][@pos[1]].nil?
         moves << [@pos[0] - vert_add, @pos[1]]
       elsif vert_add == 1
-        return nil
+        return []
       end
     end
     moves
@@ -119,7 +121,7 @@ class WhitePawn
   end
 
   def non_opening_moves
-    [@pos[0] - 1, @pos[1]] if @board[@pos[0] - 1][@pos[1]].nil?
+    @board[@pos[0] - 1][@pos[1]].nil? ? [@pos[0] - 1, @pos[1]] : []
   end
 
   def en_passant_left

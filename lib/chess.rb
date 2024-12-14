@@ -10,29 +10,58 @@ class Game
 
   def initialize
     @winner = nil
+    @board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil],
+              [nil, nil, nil, nil, nil, nil, nil, nil]]
     @player_one = WhitePlayer.new(@board)
     @player_two = BlackPlayer.new(@board)
-    @board = [@player_two.non_pawns,
-              @player_two.pawns,
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              [nil, nil, nil, nil, nil, nil, nil, nil],
-              @player_one.pawns,
-              @player_one.non_pawns]
     @current_player = @player_one
   end
 
   def show_board
     @board.each do |index|
-      puts index
+      index = index.map do |e|
+        e&.code
+      end
+      p index
     end
   end
 
   def play_game
+    set_board
+    set_piece_boards
     start_message
-    play_round until @winner || draw?
+    play_round until @winner || end_game_check
     end_message(@winner)
+  end
+
+  def end_message(player)
+    if player.nil?
+      puts "It's a Tie!"
+    else
+      puts "Player #{player.color} won this game!"
+    end
+  end
+
+  def set_board
+    @board[0] = @player_two.non_pawns
+    @board[1] = @player_two.pawns
+    @board[6] = @player_one.pawns
+    @board[7] = @player_one.non_pawns
+  end
+
+  def set_piece_boards
+    @player_one.pieces.each { |e| e.board = @board }
+    @player_two.pieces.each { |e| e.board = @board }
+  end
+
+  def start_message
+    puts "Welcome to TJ's Chess!"
   end
   # Maybe calculate current players legal moves,
 
@@ -70,12 +99,16 @@ class Game
     king = @current_player.non_pawns[4]
     # Checkmate
     if legal.empty? && king.in_check?
-      @current_player == @player_one ? end_game(@player_two) : end_game(@player_one)
+      @winner = @current_player == @player_one ? @player_two : @player_one
+      return true
     end
     # Stalemate
-    end_moves(nil) if legal.nil?
+    return true if legal.nil?
     # Draw
-    end_game(nil) if voluntary_draw? || insufficient_material?
+    # return true if insufficient_material?
+    return true if voluntary_draw?
+
+    false
   end
 
   def voluntary_draw?
@@ -89,17 +122,35 @@ class Game
     false
   end
 
+  def insufficient_material?
+    # Insufficient material:
+    # King vs king with no other pieces.
+    # King and bishop vs king.
+    # King and knight vs king.
+    p_one_pieces = @player_one.pieces.compact
+    p_two_pieces = @player_two.pieces.compact
+    return true if p_one_pieces.length == 2 && p_two_pieces.length > 1
+    return true if p_one_pieces.length > 1 && p_two_pieces.length == 2
+    return true if p_one_pieces.any? { |e| ![WhiteKing, WhiteBishop, WhiteKnight].include?(e) }
+    return true if p_two_pieces.any? { |e| ![BlackKing, BlackBIshop, BlackKnight].include?(e) }
+
+    false
+  end
+
   def play_round
     # Show board on each round
     show_board
     # Get piece and move from user
-    available_moves = [[1, 2], [2, 3]]
+    available_moves = @current_player.legal_moves
     piece, move = select_piece_and_move(available_moves)
     # Update Board
     # If current king is in check
     # old_board = @board
     # old_pos = piece.pos
     update_board(piece, move)
+    set_piece_boards
+    check?
+    change_player
     # Move must get King out of check, or keep King out of check
 
     # UNCOMMENT WHEN PLAYERS ARE MODELED!!!
@@ -108,6 +159,12 @@ class Game
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Update last move of each pawn
+  end
+
+  def check?
+    if @current_player == @player_one ? @player_two.non_pawns[4].in_check? : @player_one.non_pawns[4].in_check?
+      check_message
+    end
   end
 
   # def out_of_check(old_board, piece, old_pos)
@@ -142,13 +199,15 @@ class Game
 
   def select_piece_and_move(moves)
     piece = player_select_piece
+    piece = @board[piece[0]][piece[1]]
     [piece, player_input_move(moves, piece)]
   end
 
   def player_select_piece
+    puts 'What piece would you like to move?'
     piece = gets.chomp.split(',').map(&:to_i)
     piece = player_select_piece unless valid_input(piece)
-    @board[piece[0]][piece[1]]
+    piece
   end
 
   def valid_input(piece)
@@ -158,14 +217,16 @@ class Game
     return false if piece.nil?
     # If Current player pieces includes piece instead!!
     return false unless @current_player.pieces.include?(piece)
+    return false if piece.moves.empty?
 
     true
   end
 
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
   def player_input_move(available_moves, piece)
+    puts 'Where would you like to move it to?'
     move = gets.chomp.split(',').map(&:to_i)
-    move = player_input_move(piece) unless valid_move(available_moves, piece, move)
+    move = player_input_move(available_moves, piece) unless valid_move(available_moves, piece, move)
     move
   end
 
@@ -249,3 +310,6 @@ class Game
     end
   end
 end
+
+x = Game.new
+x.play_game

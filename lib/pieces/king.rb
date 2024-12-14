@@ -8,9 +8,10 @@ require_relative './knight'
 
 # A model of a Black King in Chess
 class BlackKing
-  attr_accessor :pos, :board, :on_opening, :color
+  attr_accessor :pos, :board, :on_opening, :color, :code
 
   def initialize(pos, board)
+    @code = "\u{265A}"
     @color = 'black'
     @pos = pos
     @board = board
@@ -210,9 +211,10 @@ end
 
 # A model of a White King in Chess
 class WhiteKing
-  attr_accessor :pos, :board, :on_opening, :color
+  attr_accessor :pos, :board, :on_opening, :color, :code
 
   def initialize(pos, board)
+    @code = "\u{2654}"
     @color = 'white'
     @pos = pos
     @board = board

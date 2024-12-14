@@ -2,9 +2,10 @@
 
 # A model for a Black Knight in Chess
 class BlackKnight
-  attr_accessor :color, :board, :pos
+  attr_accessor :color, :board, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{265E}"
     @color = 'black'
     @pos = pos
     @board = board
@@ -50,9 +51,10 @@ end
 
 # A model for a White Knight in Chess
 class WhiteKnight
-  attr_accessor :color, :board, :pos
+  attr_accessor :color, :board, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{2658}"
     @color = 'white'
     @pos = pos
     @board = board

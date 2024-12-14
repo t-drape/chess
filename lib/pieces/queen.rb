@@ -10,9 +10,10 @@ class BlackQueen
 
   include BlackBishopMovement
 
-  attr_accessor :board, :color, :pos
+  attr_accessor :board, :color, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{265B}"
     @color = 'black'
     @pos = pos
     @board = board
@@ -34,9 +35,10 @@ class WhiteQueen
 
   include WhiteBishopMovement
 
-  attr_accessor :board, :color, :pos
+  attr_accessor :board, :color, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{2655}"
     @color = 'white'
     @pos = pos
     @board = board

@@ -7,9 +7,10 @@ require_relative('./king')
 class BlackRook
   include BlackRookMovement
 
-  attr_accessor :color, :board, :on_opening, :pos
+  attr_accessor :color, :board, :on_opening, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{265C}"
     @color = 'black'
     @pos = pos
     @board = board
@@ -59,9 +60,10 @@ end
 class WhiteRook
   include WhiteRookMovement
 
-  attr_accessor :color, :on_opening, :board, :pos
+  attr_accessor :color, :on_opening, :board, :pos, :code
 
   def initialize(pos, board)
+    @code = "\u{2656}"
     @color = 'white'
     @pos = pos
     @board = board
