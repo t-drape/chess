@@ -66,9 +66,27 @@ class Game
   # end_message(nil)
 
   def end_game_check
+    legal = @current_player.legal_moves
+    king = @current_player.non_pawns[4]
     # Checkmate
-    #
+    if legal.empty? && king.in_check?
+      @current_player == @player_one ? end_game(@player_two) : end_game(@player_one)
+    end
     # Stalemate
+    end_moves(nil) if legal.nil?
+    # Draw
+    end_game(nil) if voluntary_draw? || insufficient_material?
+  end
+
+  def voluntary_draw?
+    puts "Ask For a Draw? [Y/N]\n"
+    answer = gets.chomp
+    if answer == 'Y'
+      puts "Do You Accept the Draw? [Y/N]\n"
+      opponent_answer = gets.chomp
+      return true if opponent_answer == 'Y'
+    end
+    false
   end
 
   def play_round
