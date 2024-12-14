@@ -6,7 +6,7 @@ require_relative('./../lib/pieces/queen')
 require_relative('./player')
 
 class Game
-  attr_accessor :board
+  attr_accessor :board, :current_player
 
   def initialize
     @winner = nil
@@ -75,7 +75,8 @@ class Game
     # Show board on each round
     show_board
     # Get piece and move from user
-    piece, move = select_piece_and_move
+    available_moves = [[1, 2], [2, 3]]
+    piece, move = select_piece_and_move(available_moves)
     # Update Board
     # If current king is in check
     # old_board = @board
@@ -114,12 +115,16 @@ class Game
     return if @board[move[0]][move[1]].nil?
 
     piece = @board[move[0]][move[1]]
-    @current_player == @player_one ? @player_two.remove(piece) : @player_one.remove(piece)
+    if @current_player == @player_one
+      piece.is_a?(WhitePawn) ? @player_one.pawns.delete(piece) : @player_one.non_pawns.delete(piece)
+    else
+      piece.is_a?(BlackPawn) ? @player_two.pawns.delete(piece) : @player_two.non_pawns.delete(piece)
+    end
   end
 
-  def select_piece_and_move
+  def select_piece_and_move(moves)
     piece = player_select_piece
-    [piece, player_input_move(piece)]
+    [piece, player_input_move(moves, piece)]
   end
 
   def player_select_piece
@@ -140,9 +145,9 @@ class Game
   end
 
   # Maybe Change to a dictionary mapping algebraic notation to array indexes!
-  def player_input_move(piece)
+  def player_input_move(available_moves, piece)
     move = gets.chomp.split(',').map(&:to_i)
-    move = player_input_move(piece) unless valid_move(piece, move)
+    move = player_input_move(piece) unless valid_move(available_moves, piece, move)
     move
   end
 

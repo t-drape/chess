@@ -77,6 +77,13 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#remove_capture_piece_from_player' do
+    context 'when a capture is made' do
+      it "removes the piece from the player's pieces" do
+      end
+    end
+  end
+
   describe '#select_piece_and_move' do # rubocop:disable Metrics/BlockLength
     context 'when a round is played' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
@@ -97,22 +104,22 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
 
       it 'returns an array' do
-        expect(selected.select_piece_and_move).to be_kind_of(Array)
+        expect(selected.select_piece_and_move(nil)).to be_kind_of(Array)
       end
 
       it 'calls player_select_piece once' do
         expect(selected).to receive(:player_select_piece).once
-        selected.select_piece_and_move
+        selected.select_piece_and_move(nil)
       end
 
       it 'calls player_input_move once' do
         expect(selected).to receive(:player_input_move).once
-        selected.player_input_move(piece)
+        selected.player_input_move(nil, piece)
       end
 
       it 'returns the correct order' do
         expected_output = [piece, [0, 2]]
-        expect(selected.select_piece_and_move).to eql(expected_output)
+        expect(selected.select_piece_and_move(nil)).to eql(expected_output)
       end
     end
   end
@@ -197,6 +204,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
       it 'returns true if piece belongs to current player' do
         valid.board[0][0] = piece
+        valid.current_player.pieces << piece
         expected_output = true
         input = [0, 0]
         expect(valid.valid_input(input)).to eql(expected_output)
@@ -241,27 +249,27 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
       it 'gets the move from user' do
         expect(getter).to receive(:gets).once
-        getter.player_input_move(piece)
+        getter.player_input_move(nil, piece)
       end
 
       it 'returns an array' do
-        expect(getter.player_input_move(piece)).to be_kind_of(Array)
+        expect(getter.player_input_move(nil, piece)).to be_kind_of(Array)
       end
 
       it 'returns the correctly formatted output' do
         expected_output = [1, 2]
-        expect(getter.player_input_move(piece)).to eql(expected_output)
+        expect(getter.player_input_move(nil, piece)).to eql(expected_output)
       end
 
       it 'calls valid_move once' do
         expect(getter).to receive(:valid_move).once
-        getter.player_input_move(piece)
+        getter.player_input_move(nil, piece)
       end
 
       it 'calls player_input_move once if valid_move returns false' do
         allow(getter).to receive(:valid_move).and_return(false, true)
         expect(getter).to receive(:player_input_move).once
-        getter.player_input_move(piece)
+        getter.player_input_move(nil, piece)
       end
     end
   end
@@ -282,44 +290,58 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
       it 'returns true for valid move' do
         move = [1, 2]
+        moves = [[1, 2]]
         expected_output = true
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
       it 'returns false if given move is not array of size 2' do
         move = [1, 2, 3]
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[1, 2, 3]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
       it 'returns false if x is not a number' do
         move = ['a', 2]
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[3, 4]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
       it 'returns false if y is not a number' do
         move = [2, 'a']
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[2, 'a']]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
       it 'returns false if x not between 0 and 7 inclusive' do
         move = [21, 1]
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[21, 1]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
       it 'returns false if y not between 0 and 7 inclusive' do
         move = [1, 21]
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[1, 21]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
 
-      it 'returns false if move not in available_moves of piece' do
+      it 'returns false if move not in available moves of piece' do
         move = [3, 4]
         expected_output = false
-        expect(valid.valid_move(piece, move)).to eql(expected_output)
+        moves = [[3, 4]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
+      end
+
+      it "returns false if move not in player's available moves" do
+        move = [3, 4]
+        expected_output = false
+        moves = [[2, 1]]
+        expect(valid.valid_move(moves, piece, move)).to eql(expected_output)
       end
     end
   end
