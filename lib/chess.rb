@@ -25,10 +25,10 @@ class Game
 
   def show_board
     @board.each do |index|
-      index.map do |e|
-        e.code unless e.nil?
+      index = index.map do |e|
+        e&.code
       end
-      puts index
+      p index
     end
   end
 
@@ -56,8 +56,8 @@ class Game
   end
 
   def set_piece_boards
-    @player_one.pieces.each { |e| e.board = @board }
-    @player_two.pieces.each { |e| e.board = @board }
+    @player_one.non_pawns.each { |e| e.board = @board unless e.nil? }
+    @player_two.pieces.each { |e| e.board = @board unless e.nil? }
   end
 
   def start_message
@@ -162,9 +162,9 @@ class Game
   end
 
   def check?
-    if @current_player == @player_one ? @player_two.non_pawns[4].in_check? : @player_one.non_pawns[4].in_check?
-      check_message
-    end
+    return unless @current_player == @player_one ? @player_two.pieces[12].in_check? : @player_one.pieces[12].in_check?
+
+    check_message
   end
 
   # def out_of_check(old_board, piece, old_pos)
@@ -180,7 +180,6 @@ class Game
     # Update Board
     remove_capture_piece_from_player(move)
     @board[move[0]][move[1]] = piece
-    puts @board[move[0]][move[1]]
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
     # Update Piece Pos
@@ -192,9 +191,11 @@ class Game
 
     piece = @board[move[0]][move[1]]
     if @current_player == @player_one
-      piece.is_a?(BlackPawn) ? @player_one.pawns.delete(piece) : @player_one.non_pawns.delete(piece)
+      index = @player_two.pieces.index(piece)
+      @player_two.pieces[index] = nil
     else
-      piece.is_a?(WhitePawn) ? @player_two.pawns.delete(piece) : @player_two.non_pawns.delete(piece)
+      index = @player_one.pieces.index(Piece)
+      @player_one.pieces[index] = nil
     end
   end
 
