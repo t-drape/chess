@@ -49,14 +49,14 @@ class Game
   end
 
   def set_board
-    @board[0] = @player_two.non_pawns
-    @board[1] = @player_two.pawns
-    @board[6] = @player_one.pawns
-    @board[7] = @player_one.non_pawns
+    @board[0] = @player_two.pieces[8..]
+    @board[1] = @player_two.pieces[0..7]
+    @board[6] = @player_one.pieces[0..7]
+    @board[7] = @player_one.pieces[8..]
   end
 
   def set_piece_boards
-    @player_one.non_pawns.each { |e| e.board = @board unless e.nil? }
+    @player_one.pieces.each { |e| e.board = @board unless e.nil? }
     @player_two.pieces.each { |e| e.board = @board unless e.nil? }
   end
 
@@ -96,7 +96,7 @@ class Game
 
   def end_game_check
     legal = @current_player.legal_moves
-    king = @current_player.non_pawns[4]
+    king = @current_player.pieces[12]
     # Checkmate
     if legal.empty? && king.in_check?
       @winner = @current_player == @player_one ? @player_two : @player_one
@@ -147,6 +147,7 @@ class Game
     # If current king is in check
     # old_board = @board
     # old_pos = piece.pos
+    set_last_moves(piece)
     update_board(piece, move)
     set_piece_boards
     check?
@@ -159,6 +160,17 @@ class Game
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Update last move of each pawn
+  end
+
+  def set_last_moves(piece)
+    on_start = false
+    if piece.is_a?(WhitePawn)
+      on_start = piece.pos[0] == 6
+    elsif piece.is_a?(BlackPawn)
+      on_start = piece.pos[0] == 1
+    end
+    @player_two.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
+    @player_one.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
   end
 
   def check?
