@@ -25,10 +25,10 @@ class Game
 
   def show_board
     @board.each do |index|
-      index = index.map do |e|
-        e&.code
+      index.map do |e|
+        e.code unless e.nil?
       end
-      p index
+      puts index
     end
   end
 
@@ -180,6 +180,7 @@ class Game
     # Update Board
     remove_capture_piece_from_player(move)
     @board[move[0]][move[1]] = piece
+    puts @board[move[0]][move[1]]
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
     # Update Piece Pos
