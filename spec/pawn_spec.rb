@@ -118,7 +118,7 @@ describe BlackPawn do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#non_opener_moves' do
+  describe '#non_opening_moves' do
     context 'when a pawn is not on an opening block' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -137,7 +137,7 @@ describe BlackPawn do # rubocop:disable Metrics/BlockLength
 
       it 'returns nil if single space is blocked' do
         single_mover.board[4][3] = 12
-        expected_output = nil
+        expected_output = []
         expect(single_mover.non_opening_moves).to eql(expected_output)
       end
     end
@@ -291,7 +291,7 @@ describe WhitePawn do # rubocop:disable Metrics/BlockLength
 
       it 'returns nil if the first move is blocked' do
         starting_square.board[5][3] = 12
-        expected_output = nil
+        expected_output = []
         expect(starting_square.opening_moves).to eql(expected_output)
       end
     end
@@ -347,7 +347,7 @@ describe WhitePawn do # rubocop:disable Metrics/BlockLength
 
       it 'returns nil of single space is blocked' do
         single_mover.board[3][3] = 12
-        expected_output = nil
+        expected_output = []
         expect(single_mover.non_opening_moves).to eql(expected_output)
       end
     end
