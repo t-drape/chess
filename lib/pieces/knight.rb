@@ -29,7 +29,7 @@ class BlackKnight
     moves = []
     [[-2, 1], [-1, 2], [1, 2], [2, 1]].each do |y, x|
       next unless board_range.include?(@pos[0] + y) && board_range.include?(@pos[1] + x)
-      next unless @board[@pos[0] + y][@pos[1] + x] && @board[@pos[0] + y][@pos[1] + x].color != 'black'
+      next unless @board[@pos[0] + y][@pos[1] + x].nil? || @board[@pos[0] + y][@pos[1] + x].color != 'black'
 
       moves << [@pos[0] + y,
                 @pos[1] + x]

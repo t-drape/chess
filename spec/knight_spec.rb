@@ -127,7 +127,6 @@ describe WhiteKnight do # rubocop:disable Metrics/BlockLength
       subject(:mover) { described_class.new([4, 3], board) }
       it 'returns all moves to the right of the piece' do
         mover.board[4][3] = mover
-        # From [4, 3]
         expected_output = [[2, 4], [3, 5], [5, 5], [6, 4]]
         expect(mover.right_moves).to eql(expected_output)
       end
