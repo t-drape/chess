@@ -129,12 +129,12 @@ class Game
     # King and knight vs king.
     p_one_pieces = @player_one.pieces.compact
     p_two_pieces = @player_two.pieces.compact
-    return true if p_one_pieces.length == 2 && p_two_pieces.length > 1
-    return true if p_one_pieces.length > 1 && p_two_pieces.length == 2
-    return true if p_one_pieces.any? { |e| ![WhiteKing, WhiteBishop, WhiteKnight].include?(e) }
-    return true if p_two_pieces.any? { |e| ![BlackKing, BlackBIshop, BlackKnight].include?(e) }
+    return false if p_one_pieces.length >= 2 && p_two_pieces.length > 1
+    return false if p_one_pieces.length > 1 && p_two_pieces.length >= 2
+    return false if p_one_pieces.any? { |e| [WhitePawn, WhiteRook, WhiteQueen].include?(e) }
+    return false if p_two_pieces.any? { |e| [BlackPawn, BlackRook, BlackQueen].include?(e) }
 
-    false
+    true
   end
 
   def play_round

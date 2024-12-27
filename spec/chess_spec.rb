@@ -149,6 +149,61 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#insufficient_material?' do
+    context 'when a round is completed' do
+      subject(:material) { described_class.new }
+      it 'returns false if player one has two or more pieces and player two has more than one piece' do
+        expect(material.insufficient_material?).to eql(false)
+      end
+
+      it 'returns false if player one has more than two pieces and player two has two or more pieces' do
+        expect(material.insufficient_material?).to eql(false)
+      end
+
+      it 'returns false if player one has a piece other than a King, Bishop, and Knight' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil), WhiteQueen.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil), BlackBishop.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(false)
+      end
+
+      it 'returns false if player two has a piece other than a King, Bishop, and Knight' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil), WhiteBishop.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil), BlackQueen.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(false)
+      end
+
+      it 'returns true for king vs king' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(true)
+      end
+
+      it 'returns true for king and bishop vs king' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil), WhiteBishop.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(true)
+      end
+
+      it 'returns true for king and knight vs king' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil), WhiteKnight.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(true)
+      end
+
+      it 'returns true for king vs king and bishop' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil), BlackBishop.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(true)
+      end
+
+      it 'returns true for king vs king and knight' do
+        material.instance_variable_get(:@player_one).pieces = [WhiteKing.new(nil, nil)]
+        material.instance_variable_get(:@player_two).pieces = [BlackKing.new(nil, nil), BlackKnight.new(nil, nil)]
+        expect(material.insufficient_material?).to eql(true)
+      end
+    end
+  end
+
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
