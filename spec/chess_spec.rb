@@ -102,6 +102,20 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#set_piece_boards' do
+    context 'before a round is played' do
+      subject(:piece_board) { described_class.new }
+      it "sets each piece's board variable to the game board" do
+        player_one = piece_board.instance_variable_get(:@player_one)
+        player_two = piece_board.instance_variable_get(:@player_two)
+        all_pieces = player_one.pieces + player_two.pieces
+        all_pieces = all_pieces.map(&:board)
+        piece_board.set_piece_boards
+        expect(all_pieces).to all eql(piece_board.board)
+      end
+    end
+  end
+
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
