@@ -149,8 +149,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#insufficient_material?' do
-    context 'when a round is completed' do
+  describe '#insufficient_material?' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is completed' do # rubocop:disable Metrics/BlockLength
       subject(:material) { described_class.new }
       it 'returns false if player one has two or more pieces and player two has more than one piece' do
         expect(material.insufficient_material?).to eql(false)
