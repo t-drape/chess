@@ -325,5 +325,5 @@ class Game
   end
 end
 
-x = Game.new
-x.play_game
+# x = Game.new
+# x.play_game

@@ -8,6 +8,29 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 
 describe Game do # rubocop:disable Metrics/BlockLength
+  describe '#initialize' do
+    context 'when a game is started' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+      it 'creates a new WhitePlayer' do
+        new_class = described_class.new
+        player_one = new_class.instance_variable_get(:@player_one)
+        expect(player_one).to be_kind_of(WhitePlayer)
+      end
+
+      it 'creates a new BlackPlayer' do
+        new_class = described_class.new
+        player_two = new_class.instance_variable_get(:@player_two)
+        expect(player_two).to be_kind_of(BlackPlayer)
+      end
+    end
+  end
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
