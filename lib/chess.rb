@@ -32,19 +32,19 @@ class Game
     end
   end
 
-  def play_game
-    set_board
-    set_piece_boards
-    start_message
-    play_round until @winner || end_game_check
-    end_message(@winner)
-  end
+  # def play_game
+  #   set_board
+  #   set_piece_boards
+  #   start_message
+  #   play_round until @winner || end_game_check
+  #   end_message(@winner)
+  # end
 
   def end_message(player)
     if player.nil?
-      puts "It's a Tie!"
+      puts "It's a Draw!"
     else
-      puts "Player #{player.color} won this game!"
+      puts "#{player.color.capitalize} Player wins!"
     end
   end
 

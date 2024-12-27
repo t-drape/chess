@@ -57,6 +57,22 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#end_message' do
+    context 'when a game is over' do
+      subject(:messages) { described_class.new }
+      it 'outputs the correct message for a draw' do
+        draw_message = "It's a Draw!\n"
+        expect { messages.end_message(nil) }.to output(draw_message).to_stdout
+      end
+
+      it 'outputs the correct message for a win' do
+        win_message = "Black Player wins!\n"
+        player_two = messages.instance_variable_get(:@player_two)
+        expect { messages.end_message(player_two) }.to output(win_message).to_stdout
+      end
+    end
+  end
+
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
