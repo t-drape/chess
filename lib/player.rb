@@ -39,7 +39,7 @@ class BlackPlayer
 
   def legal_moves
     moves = []
-    king = @non_pawns[4]
+    king = @pieces[12]
     @pieces.each do |piece|
       next if piece.nil?
 
@@ -94,7 +94,7 @@ class WhitePlayer
 
   def legal_moves
     moves = []
-    king = @non_pawns[4]
+    king = @pieces[12]
     @pieces.each do |piece|
       next if piece.nil?
 

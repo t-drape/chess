@@ -24,9 +24,10 @@ class BlackKing
     @movements.each do |e|
       new_height = @pos[0] + e[0]
       new_width = @pos[1] + e[1]
-      if new_height.between?(0, 7) && new_width.between?(0, 7) && @board[new_height][new_width].nil?
-        moves << [new_height, new_width]
-      end
+      next unless new_height.between?(0, 7) && new_width.between?(0, 7)
+      next unless @board[new_height][new_width].nil? || @board[new_height][new_width].color != 'black'
+
+      moves << [new_height, new_width]
     end
     moves
   end
@@ -227,9 +228,10 @@ class WhiteKing
     @movements.each do |e|
       new_height = @pos[0] + e[0]
       new_width = @pos[1] + e[1]
-      if new_height.between?(0, 7) && new_width.between?(0, 7) && @board[new_height][new_width].nil?
-        moves << [new_height, new_width]
-      end
+      next unless new_height.between?(0, 7) && new_width.between?(0, 7)
+      next unless @board[new_height][new_width].nil? || @board[new_height][new_width].color != 'white'
+
+      moves << [new_height, new_width]
     end
     moves
   end

@@ -64,8 +64,8 @@ describe BlackPlayer do # rubocop:disable Metrics/BlockLength
 
       subject(:legal) { described_class.new(board) }
       it 'returns all legal moves for the current player' do
-        legal.board[0] = legal.non_pawns
-        legal.board[1] = legal.pawns
+        legal.board[0] = legal.pieces[9..]
+        legal.board[1] = legal.pieces[0..8]
         expected_output = [[2, 0], [3, 0], [2, 1], [3, 1], [2, 2], [3, 2], [2, 3], [3, 3], [2, 4], [3, 4], [2, 5],
                            [3, 5], [2, 6], [3, 6], [2, 7], [3, 7]]
         expect(legal.legal_moves).to eql(expected_output)
