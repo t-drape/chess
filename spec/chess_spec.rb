@@ -116,6 +116,39 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#end_game_check' do
+    context 'when a round is over' do
+      subject(:checker) { described_class.new }
+
+      before do
+        allow(checker).to receive(:voluntary_draw?).and_return(false)
+        allow(checker.instance_variable_get(:@current_player)).to receive(:legal_moves).and_return([1, 2, 3])
+      end
+
+      it 'returns true if both players agree to a draw' do
+        allow(checker).to receive(:voluntary_draw?).and_return(true)
+        expect(checker.end_game_check).to eql(true)
+      end
+
+      it 'returns true if no legal moves are available' do
+        allow(checker.instance_variable_get(:@current_player)).to receive(:legal_moves).and_return([])
+        expect(checker.end_game_check).to eql(true)
+      end
+
+      it 'updates winner variable if no legal moves and king is in check' do
+        allow(checker.instance_variable_get(:@current_player)).to receive(:legal_moves).and_return([])
+        allow(checker.instance_variable_get(:@current_player).pieces[12]).to receive(:in_check?).and_return(true)
+        expect { checker.end_game_check }.to change {
+          checker.instance_variable_get(:@winner)
+        }.from(nil).to(checker.instance_variable_get(:@player_two))
+      end
+
+      it 'returns false otherwise' do
+        expect(checker.end_game_check).to eql(false)
+      end
+    end
+  end
+
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],

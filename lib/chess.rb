@@ -103,7 +103,7 @@ class Game
       return true
     end
     # Stalemate
-    return true if legal.nil?
+    return true if legal.empty?
     # Draw
     # return true if insufficient_material?
     return true if voluntary_draw?
