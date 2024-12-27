@@ -73,6 +73,35 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#set_board' do
+    context 'when play_game is called' do
+      subject(:board_setter) { described_class.new }
+      it 'sets the first row to the correct values' do
+        player_two = board_setter.instance_variable_get(:@player_two)
+        first_row_pieces = player_two.pieces[8..]
+        expect { board_setter.set_board }.to change { board_setter.board[0] }.to(first_row_pieces)
+      end
+
+      it 'sets the second row to the correct values' do
+        player_two = board_setter.instance_variable_get(:@player_two)
+        second_row_pieces = player_two.pieces[0..7]
+        expect { board_setter.set_board }.to change { board_setter.board[1] }.to(second_row_pieces)
+      end
+
+      it 'sets the seventh row to the correct values' do
+        player_one = board_setter.instance_variable_get(:@player_one)
+        seventh_row_pieces = player_one.pieces[0..7]
+        expect { board_setter.set_board }.to change { board_setter.board[6] }.to(seventh_row_pieces)
+      end
+
+      it 'sets the eighth row to the correct values' do
+        player_one = board_setter.instance_variable_get(:@player_one)
+        eighth_row_pieces = player_one.pieces[8..]
+        expect { board_setter.set_board }.to change { board_setter.board[7] }.to(eighth_row_pieces)
+      end
+    end
+  end
+
   describe '#play_round' do # rubocop:disable Metrics/BlockLength
     context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
