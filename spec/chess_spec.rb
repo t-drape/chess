@@ -34,10 +34,25 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
   describe '#show_board' do
     context 'when the board needs to be shown' do
+      board = [[nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil],
+               [nil, nil, nil, nil, nil, nil, nil, nil]]
+
+      subject(:each_row_of_board) { described_class.new }
       it 'calls each for the board' do
-        each_row_of_board = described_class.new
         expect(each_row_of_board.board).to receive(:each)
         each_row_of_board.show_board
+      end
+
+      it 'outputs the correct value' do
+        each_row_of_board.board = board
+        expected_output = "[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n[nil, nil, nil, nil, nil, nil, nil, nil]\n"
+        expect { each_row_of_board.show_board }.to output(expected_output).to_stdout
       end
     end
   end
