@@ -332,3 +332,9 @@ end
 
 # x = Game.new
 # x.play_game
+
+# Food for thought in refactor
+# Make a board class and move all updating function to that class
+# Abstract as much as possible and move functions to their classes
+# Make set last moves dependent on current player to reduce assignment cost
+# Move create new piece to player class

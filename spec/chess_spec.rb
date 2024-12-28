@@ -242,8 +242,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#set_last_moves' do
-    context 'when a round is over' do
+  describe '#set_last_moves' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is over' do # rubocop:disable Metrics/BlockLength
       subject(:last_moves) { described_class.new }
       let(:piece) { BlackRook.new([0, 0], nil) }
       let(:last_black_pawn) { BlackPawn.new([1, 0], nil, nil) }
@@ -309,8 +309,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#update_board' do
-    context 'when a round finishes' do
+  describe '#update_board' do # rubocop:disable Metrics/BlockLength
+    context 'when a round finishes' do # rubocop:disable Metrics/BlockLength
       board_before = [[nil, nil, nil, nil, nil, nil, nil, nil],
                       [nil, nil, nil, nil, nil, nil, nil, nil],
                       [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -350,7 +350,30 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
   describe '#remove_capture_piece_from_player' do
     context 'when a capture is made' do
-      it "removes the piece from the player's pieces" do
+      subject(:captures) { described_class.new }
+
+      it 'changes the value of the piece to nil in the pieces array for player two' do
+        move = [3, 3]
+        captures.board[3][3] = captures.instance_variable_get(:@player_two).pieces[6]
+        captured = captures.instance_variable_get(:@player_two).pieces[6]
+        expect { captures.remove_capture_piece_from_player(move) }.to change {
+          captures.instance_variable_get(:@player_two).pieces[6]
+        }.from(captured).to(nil)
+      end
+
+      it 'changes the value of the piece to nil in the pieces array for player one' do
+        captures.change_player
+        move = [6, 0]
+        captures.board[6][0] = captures.instance_variable_get(:@player_one).pieces[0]
+        captured = captures.instance_variable_get(:@player_one).pieces[0]
+        expect { captures.remove_capture_piece_from_player(move) }.to change {
+          captures.instance_variable_get(:@player_one).pieces[0]
+        }.from(captured).to(nil)
+      end
+
+      it 'returns nil if no piece is captured' do
+        move = [0, 3]
+        expect(captures.remove_capture_piece_from_player(move)).to eql(nil)
       end
     end
   end
