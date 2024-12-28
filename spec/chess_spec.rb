@@ -647,25 +647,29 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
 
       it 'gets the piece for the move from user' do
+        moves = [[2, 2], [3, 2]]
         expect(getter).to receive(:gets).once
-        getter.player_select_piece
+        getter.player_select_piece(moves)
       end
 
       it 'returns the correctly formatted output' do
+        moves = [[2, 2], [3, 2]]
         getter.board[1][2] = piece
         expected_output = piece.pos
-        expect(getter.player_select_piece).to eql(expected_output)
+        expect(getter.player_select_piece(moves)).to eql(expected_output)
       end
 
       it 'calls valid_piece once' do
+        moves = [[2, 2], [3, 2]]
         expect(getter).to receive(:valid_input).once
-        getter.player_select_piece
+        getter.player_select_piece(moves)
       end
 
       it 'calls player_select_piece once if valid_piece returns false' do
+        moves = [[2, 2], [3, 2]]
         allow(getter).to receive(:valid_input).and_return(false, true)
         expect(getter).to receive(:player_select_piece).once
-        getter.player_select_piece
+        getter.player_select_piece(moves)
       end
     end
   end
@@ -686,31 +690,35 @@ describe Game do # rubocop:disable Metrics/BlockLength
       let(:opponent_piece) { BlackRook.new([1, 2], board) }
 
       it 'returns false if board index length is more than 2' do
+        moves = [[2, 2], [3, 2]]
         expected_output = false
         input = [0, 0, 0]
-        expect(valid.valid_input(input)).to eql(expected_output)
+        expect(valid.valid_input(input, moves)).to eql(expected_output)
       end
 
       it 'returns false if index is nil' do
+        moves = [[2, 2], [3, 2]]
         valid.board = board
         expected_output = false
         input = [0, 0]
-        expect(valid.valid_input(input)).to eql(expected_output)
+        expect(valid.valid_input(input, moves)).to eql(expected_output)
       end
 
       it 'returns false if piece belongs to opponent' do
+        moves = [[2, 2], [3, 2]]
         valid.board[0][0] = opponent_piece
         expected_output = false
         input = [0, 0]
-        expect(valid.valid_input(input)).to eql(expected_output)
+        expect(valid.valid_input(input, moves)).to eql(expected_output)
       end
 
       it 'returns true if piece belongs to current player' do
+        moves = [[2, 2], [3, 2]]
         valid.board[0][0] = piece
         valid.current_player.pieces << piece
         expected_output = true
         input = [0, 0]
-        expect(valid.valid_input(input)).to eql(expected_output)
+        expect(valid.valid_input(input, moves)).to eql(expected_output)
       end
     end
   end

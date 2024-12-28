@@ -217,19 +217,19 @@ class Game
   end
 
   def select_piece_and_move(moves)
-    piece = player_select_piece
+    piece = player_select_piece(moves)
     piece = @board[piece[0]][piece[1]]
     [piece, player_input_move(moves, piece)]
   end
 
-  def player_select_piece
+  def player_select_piece(moves)
     puts 'What piece would you like to move?'
     piece = gets.chomp.split(',').map(&:to_i)
-    piece = player_select_piece unless valid_input(piece)
+    piece = player_select_piece(moves) unless valid_input(piece, moves)
     piece
   end
 
-  def valid_input(piece)
+  def valid_input(piece, all_moves)
     return false if piece.length != 2
 
     piece = @board[piece[0]][piece[1]]
@@ -237,6 +237,7 @@ class Game
     # If Current player pieces includes piece instead!!
     return false unless @current_player.pieces.include?(piece)
     return false if piece.moves.empty?
+    return false unless piece.moves.any? { |e| all_moves.include?(e) }
 
     true
   end
@@ -331,6 +332,7 @@ class Game
 end
 
 # x = Game.new
+# x.play_game
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class
