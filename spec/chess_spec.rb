@@ -285,20 +285,28 @@ describe Game do # rubocop:disable Metrics/BlockLength
 
       subject(:update) { described_class.new }
       let(:piece) { BlackRook.new([1, 2], board_before) }
+      before do
+        allow(update).to receive(:remove_capture_piece_from_player)
+      end
 
-      xit 'updates the board to reflect the new move' do
+      it 'updates the board to reflect the new move' do
         update.board = board_before
         expect { update.update_board(piece, [0, 2]) }.to change { update.board[0][2] }.from(nil).to(piece)
       end
 
-      xit 'removes the last position of the piece' do
+      it 'changes the pos of the piece' do
+        expect { update.update_board(piece, [0, 2]) }.to change { piece.pos }.from([1, 2]).to([0, 2])
+      end
+
+      it 'removes the last position of the piece' do
         update.board = board_before
         update.board[1][2] = piece
         expect { update.update_board(piece, [0, 2]) }.to change { update.board[1][2] }.from(piece).to(nil)
       end
 
-      xit 'changes the pos of the piece' do
-        expect { update.update_board(piece, [0, 2]) }.to change { piece.pos }.from([1, 2]).to([0, 2])
+      it 'calls remove_capture_piece_from_player once' do
+        expect(update).to receive(:remove_capture_piece_from_player)
+        update.update_board(piece, [0, 2])
       end
     end
   end

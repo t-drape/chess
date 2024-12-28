@@ -202,14 +202,15 @@ class Game
   end
 
   def remove_capture_piece_from_player(move)
-    return if @board[move[0]][move[1]].nil?
-
     piece = @board[move[0]][move[1]]
+
+    return if piece.nil?
+
     if @current_player == @player_one
       index = @player_two.pieces.index(piece)
       @player_two.pieces[index] = nil
     else
-      index = @player_one.pieces.index(Piece)
+      index = @player_one.pieces.index(piece)
       @player_one.pieces[index] = nil
     end
   end
