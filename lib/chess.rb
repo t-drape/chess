@@ -32,13 +32,13 @@ class Game
     end
   end
 
-  # def play_game
-  #   set_board
-  #   set_piece_boards
-  #   start_message
-  #   play_round until @winner || end_game_check
-  #   end_message(@winner)
-  # end
+  def play_game
+    start_message
+    set_board
+    set_piece_boards
+    play_round until end_game_check
+    end_message(@winner)
+  end
 
   def end_message(player)
     if player.nil?
@@ -99,7 +99,7 @@ class Game
     king = @current_player.pieces[12]
     # Checkmate
     if legal.empty? && king.in_check?
-      @winner = @current_player == @player_one ? @player_two : @player_one
+      @winner = (@current_player == @player_one ? @player_two : @player_one)
       return true
     end
     # Stalemate
@@ -218,7 +218,8 @@ class Game
 
   def select_piece_and_move(moves)
     piece = player_select_piece
-    [@board[piece[0]][piece[1]], player_input_move(moves, piece)]
+    piece = @board[piece[0]][piece[1]]
+    [piece, player_input_move(moves, piece)]
   end
 
   def player_select_piece
@@ -330,9 +331,6 @@ class Game
 end
 
 # x = Game.new
-# x.set_board
-# x.play_round
-# x.play_round
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class

@@ -57,6 +57,58 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#play_game' do
+    context 'when a game is started' do
+      subject(:game_on) { described_class.new }
+
+      it 'calls start message once' do
+        allow(game_on).to receive(:set_board)
+        allow(game_on).to receive(:set_piece_boards)
+        allow(game_on).to receive(:end_message)
+        allow(game_on).to receive(:end_game_check).and_return(true)
+        expect(game_on).to receive(:start_message).once
+        game_on.play_game
+      end
+
+      it 'calls set board once' do
+        allow(game_on).to receive(:start_message)
+        allow(game_on).to receive(:set_piece_boards)
+        allow(game_on).to receive(:end_message)
+        allow(game_on).to receive(:end_game_check).and_return(true)
+        expect(game_on).to receive(:set_board).once
+        game_on.play_game
+      end
+
+      it 'calls set piece boards once' do
+        allow(game_on).to receive(:start_message)
+        allow(game_on).to receive(:set_board)
+        allow(game_on).to receive(:end_message)
+        allow(game_on).to receive(:end_game_check).and_return(true)
+        expect(game_on).to receive(:set_piece_boards).once
+        game_on.play_game
+      end
+
+      it 'calls play round until end game check returns true' do
+        allow(game_on).to receive(:start_message)
+        allow(game_on).to receive(:set_board)
+        allow(game_on).to receive(:set_piece_boards)
+        allow(game_on).to receive(:end_message)
+        allow(game_on).to receive(:end_game_check).and_return(false, true)
+        expect(game_on).to receive(:play_round).once
+        game_on.play_game
+      end
+
+      it 'calls end_message once after loop' do
+        allow(game_on).to receive(:start_message)
+        allow(game_on).to receive(:set_board)
+        allow(game_on).to receive(:set_piece_boards)
+        allow(game_on).to receive(:end_game_check).and_return(true)
+        expect(game_on).to receive(:end_message).once
+        game_on.play_game
+      end
+    end
+  end
+
   describe '#end_message' do
     context 'when a game is over' do
       subject(:messages) { described_class.new }
