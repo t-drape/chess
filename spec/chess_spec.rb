@@ -149,6 +149,59 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#voluntary_draw?' do
+    context 'when a round is initiated' do
+      subject(:draw) { described_class.new }
+
+      before do
+        allow(draw).to receive(:gets).and_return('N')
+      end
+
+      it 'asks the current user if they want to propose a draw' do
+        first_message = "Ask For a Draw? [Y/N]\n"
+        expect { draw.voluntary_draw? }.to output(first_message).to_stdout
+      end
+
+      it 'gets input from the user once for a no answer' do
+        allow(draw).to receive(:puts)
+        allow(draw).to receive(:gets).and_return('N')
+        expect(draw).to receive(:gets).once
+        draw.voluntary_draw?
+      end
+
+      it 'asks the other player if they accept the draw if current player wats a draw' do
+        first_message = "Ask For a Draw? [Y/N]\n"
+        allow(draw).to receive(:gets).and_return('Y')
+        second_message = "Do You Accept the Draw? [Y/N]\n"
+        expect { draw.voluntary_draw? }.to output(first_message + second_message).to_stdout
+      end
+
+      it 'returns true if other player accepts draw offer' do
+        allow(draw).to receive(:puts)
+        allow(draw).to receive(:gets).and_return('Y', 'Y')
+        expect(draw.voluntary_draw?).to eql(true)
+      end
+
+      it 'returns false if current player does not want to propose a draw' do
+        allow(draw).to receive(:puts)
+        allow(draw).to receive(:gets).and_return('N')
+        expect(draw.voluntary_draw?).to eql(false)
+      end
+
+      it 'returns false if other players does not want to draw' do
+        allow(draw).to receive(:puts)
+        allow(draw).to receive(:gets).and_return('Y', 'N')
+        expect(draw.voluntary_draw?).to eql(false)
+      end
+
+      it "returns false if first answer is not 'Y'" do
+        allow(draw).to receive(:puts)
+        allow(draw).to receive(:gets).and_return('T')
+        expect(draw.voluntary_draw?).to eql(false)
+      end
+    end
+  end
+
   describe '#insufficient_material?' do # rubocop:disable Metrics/BlockLength
     context 'when a round is completed' do # rubocop:disable Metrics/BlockLength
       subject(:material) { described_class.new }
