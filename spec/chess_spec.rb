@@ -397,21 +397,22 @@ describe Game do # rubocop:disable Metrics/BlockLength
         allow(selected).to receive(:player_input_move).and_return([0, 2])
       end
 
-      xit 'returns an array' do
+      it 'returns an array' do
         expect(selected.select_piece_and_move(nil)).to be_kind_of(Array)
       end
 
-      xit 'calls player_select_piece once' do
+      it 'calls player_select_piece once' do
         expect(selected).to receive(:player_select_piece).once
         selected.select_piece_and_move(nil)
       end
 
-      xit 'calls player_input_move once' do
+      it 'calls player_input_move once' do
         expect(selected).to receive(:player_input_move).once
         selected.player_input_move(nil, piece)
       end
 
-      xit 'returns the correct order' do
+      it 'returns the correct order' do
+        selected.board[1][2] = piece
         expected_output = [piece, [0, 2]]
         expect(selected.select_piece_and_move(nil)).to eql(expected_output)
       end

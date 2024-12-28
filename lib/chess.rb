@@ -218,8 +218,7 @@ class Game
 
   def select_piece_and_move(moves)
     piece = player_select_piece
-    piece = @board[piece[0]][piece[1]]
-    [piece, player_input_move(moves, piece)]
+    [@board[piece.pos[0]][piece.pos[1]], player_input_move(moves, piece)]
   end
 
   def player_select_piece
