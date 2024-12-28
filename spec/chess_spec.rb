@@ -149,8 +149,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#voluntary_draw?' do
-    context 'when a round is initiated' do
+  describe '#voluntary_draw?' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is initiated' do # rubocop:disable Metrics/BlockLength
       subject(:draw) { described_class.new }
 
       before do
