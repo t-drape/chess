@@ -257,8 +257,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#play_round' do # rubocop:disable Metrics/BlockLength
-    context 'when a round is started' do # rubocop:disable Metrics/BlockLength
+  describe '#play_round' do
+    context 'when a round is started' do
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -269,29 +269,131 @@ describe Game do # rubocop:disable Metrics/BlockLength
                [nil, nil, nil, nil, nil, nil, nil, nil]]
 
       subject(:round) { described_class.new }
-      let(:piece) { BlackRook.new([1, 2], board) }
+      let(:piece) { WhiteRook.new([1, 2], board) }
 
-      before do
-        round.board = board
-        round.board[1][2] = piece
-        allow(round).to receive(:show_board)
-        allow(round).to receive(:select_piece_and_move).and_return([piece, [1, 3]])
-      end
-
-      xit 'calls show_board once' do
+      it 'calls show board once' do
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
         expect(round).to receive(:show_board).once
         round.play_round
       end
 
-      xit 'calls select_piece_and_move once' do
+      it 'finds all legal moves for current player' do
+        allow(round).to receive(:show_board)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
+        expect(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        round.play_round
+      end
+
+      it 'calls select piece and move once (gets move from user)' do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
         expect(round).to receive(:select_piece_and_move).once
         round.play_round
       end
 
-      xit 'calls update_board once' do
+      it 'calls set_last_moves once' do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
+        expect(round).to receive(:set_last_moves).once
+        round.play_round
+      end
+
+      it 'calls update_board once' do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
         expect(round).to receive(:update_board).once
         round.play_round
       end
+
+      it "calls set piece boards once (updates each piece's board variable)" do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:check?)
+        allow(round).to receive(:change_player)
+        expect(round).to receive(:set_piece_boards).once
+        round.play_round
+      end
+
+      it 'calls check? once' do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:change_player)
+        expect(round).to receive(:check?).once
+        round.play_round
+      end
+
+      it 'calls change player once' do
+        allow(round).to receive(:show_board)
+        allow(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+        allow(round).to receive(:select_piece_and_move)
+        allow(round).to receive(:set_last_moves)
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:set_piece_boards)
+        allow(round).to receive(:check?)
+        expect(round).to receive(:change_player).once
+        round.play_round
+      end
+
+      # before do
+      #   round.board = board
+      #   round.board[1][2] = piece
+      #   allow(round).to receive(:show_board)
+      #   allow(round).to receive(:select_piece_and_move).and_return([piece, [1, 3]])
+      #   allow(round).to receive(:)
+      # end
+
+      # it 'calls show_board once' do
+      #   expect(round).to receive(:show_board).once
+      #   round.play_round
+      # end
+
+      # it 'calls legal moves on current player once' do
+      #   expect(round.instance_variable_get(:@current_player)).to receive(:legal_moves)
+      #   round.play_round
+      # end
+
+      # it 'calls select_piece_and_move once' do
+      #   expect(round).to receive(:select_piece_and_move).once
+      #   round.play_round
+      # end
+
+      # it 'calls update_board once' do
+      #   expect(round).to receive(:update_board).once
+      #   round.play_round
+      # end
     end
   end
 
@@ -446,7 +548,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       let(:piece) { BlackRook.new([1, 2], board) }
 
       before do
-        allow(selected).to receive(:player_select_piece).and_return(piece)
+        allow(selected).to receive(:player_select_piece).and_return([1, 2])
         allow(selected).to receive(:player_input_move).and_return([0, 2])
       end
 

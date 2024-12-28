@@ -218,7 +218,7 @@ class Game
 
   def select_piece_and_move(moves)
     piece = player_select_piece
-    [@board[piece.pos[0]][piece.pos[1]], player_input_move(moves, piece)]
+    [@board[piece[0]][piece[1]], player_input_move(moves, piece)]
   end
 
   def player_select_piece
@@ -330,7 +330,9 @@ class Game
 end
 
 # x = Game.new
-# x.play_game
+# x.set_board
+# x.play_round
+# x.play_round
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class
