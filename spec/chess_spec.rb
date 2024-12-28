@@ -242,6 +242,36 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#check?' do
+    context 'when a move is made' do
+      subject(:checker) { described_class.new }
+      it 'calls check_message if player one move puts player two in check' do
+        allow(checker.instance_variable_get(:@player_two).pieces[12]).to receive(:in_check?).and_return(true)
+        expect(checker).to receive(:check_message)
+        checker.check?
+      end
+
+      it 'calls check_message if player two move puts player one in check' do
+        checker.change_player
+        allow(checker.instance_variable_get(:@player_one).pieces[12]).to receive(:in_check?).and_return(true)
+        expect(checker).to receive(:check_message)
+        checker.check?
+      end
+
+      it 'returns nil if player one move does not put player two in check' do
+        checker.change_player
+        allow(checker.instance_variable_get(:@player_two).pieces[12]).to receive(:in_check?).and_return(false)
+        expect(checker.check?).to eql(nil)
+      end
+
+      it 'returns nil if player two move does not put player one in check' do
+        checker.change_player
+        allow(checker.instance_variable_get(:@player_one).pieces[12]).to receive(:in_check?).and_return(false)
+        expect(checker.check?).to eql(nil)
+      end
+    end
+  end
+
   describe '#update_board' do
     context 'when a round finishes' do
       board_before = [[nil, nil, nil, nil, nil, nil, nil, nil],

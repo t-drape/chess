@@ -174,8 +174,11 @@ class Game
   end
 
   def check?
-    return unless @current_player == @player_one ? @player_two.pieces[12].in_check? : @player_one.pieces[12].in_check?
-
+    if @current_player == @player_one
+      return unless @player_two.pieces[12].in_check?
+    else
+      return unless @player_one.pieces[12].in_check?
+    end
     check_message
   end
 
