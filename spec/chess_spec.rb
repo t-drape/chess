@@ -242,6 +242,43 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#set_last_moves' do
+    context 'when a round is over' do
+      subject(:last_moves) { described_class.new }
+      let(:piece) { BlackRook.new([0, 0], nil) }
+      let(:last_black_pawn) { BlackPawn.new([1, 0], nil, nil) }
+      let(:last_white_pawn) { WhitePawn.new([6, 6], nil, nil) }
+
+      it 'updates the last move variable of each player one pawn' do
+        last_moves.set_last_moves(piece)
+        pawns = last_moves.instance_variable_get(:@player_one).pieces[0..7]
+        pawns = pawns.map(&:last_move)
+        expect(pawns).to all eql({ piece: piece, from_start: false })
+      end
+
+      it 'updates the last move variable of each player two pawn' do
+        last_moves.set_last_moves(piece)
+        pawns = last_moves.instance_variable_get(:@player_two).pieces[0..7]
+        pawns = pawns.map(&:last_move)
+        expect(pawns).to all eql({ piece: piece, from_start: false })
+      end
+
+      it 'works correctly for a black pawn moving from its starting position' do
+        last_moves.set_last_moves(last_black_pawn)
+        pawns = last_moves.instance_variable_get(:@player_one).pieces[0..7]
+        pawns = pawns.map(&:last_move)
+        expect(pawns).to all eql({ piece: last_black_pawn, from_start: true })
+      end
+
+      it 'works correctly for a white pawn moving from its starting position' do
+        last_moves.set_last_moves(last_white_pawn)
+        pawns = last_moves.instance_variable_get(:@player_two).pieces[0..7]
+        pawns = pawns.map(&:last_move)
+        expect(pawns).to all eql({ piece: last_white_pawn, from_start: true })
+      end
+    end
+  end
+
   describe '#check?' do
     context 'when a move is made' do
       subject(:checker) { described_class.new }

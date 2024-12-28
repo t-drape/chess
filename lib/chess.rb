@@ -162,6 +162,7 @@ class Game
     # Update last move of each pawn
   end
 
+  # Move to pawn file in refactor
   def set_last_moves(piece)
     on_start = false
     if piece.is_a?(WhitePawn)
