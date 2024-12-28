@@ -166,9 +166,9 @@ class Game
   def set_last_moves(piece)
     on_start = false
     if piece.is_a?(WhitePawn)
-      on_start = piece.pos[0] == 6
+      on_start = true if piece.pos[0] == 6
     elsif piece.is_a?(BlackPawn)
-      on_start = piece.pos[0] == 1
+      on_start = true if piece.pos[0] == 1
     end
     @player_two.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
     @player_one.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
@@ -202,10 +202,10 @@ class Game
     piece.pos = move
   end
 
-  def remove_capture_piece_from_player(piece, move)
+  def remove_capture_piece_from_player(new_piece, move)
     piece = @board[move[0]][move[1]]
 
-    return ep_capture(piece, move) if piece.nil?
+    return ep_capture(new_piece, move) if piece.nil?
 
     if @current_player == @player_one
       index = @player_two.pieces.index(piece)
@@ -218,21 +218,22 @@ class Game
 
   def ep_capture(piece, move)
     if @current_player == @player_one
-      return unless piece == WhitePawn
+      return unless piece.is_a?(WhitePawn)
 
-      if piece.last_move[:from_start] && move == [last_move[:piece].pos[0] - 1, last_move[:piece].pos[1]]
-        index = @player_two.pieces.index(last_move[:piece])
+      if piece.last_move[:from_start] && move == [piece.last_move[:piece].pos[0] - 1,
+                                                  piece.last_move[:piece].pos[1]]
+        index = @player_two.pieces.index(piece.last_move[:piece])
         @player_two.pieces[index] = nil
       end
     else
-      return unless piece == BlackPawn
+      return unless piece.is_a?(BlackPawn)
 
-      if piece.last_move[:from_start] && move == [last_move[:piece].pos[0] + 1, last_move[:piece].pos[1]]
-        index = @player_one.pieces.index(last_move[:piece])
+      if piece.last_move[:from_start] && move == [piece.last_move[:piece].pos[0] + 1,
+                                                  piece.last_move[:piece].pos[1]]
+        index = @player_one.pieces.index(piece.last_move[:piece])
         @player_one.pieces[index] = nil
       end
     end
-    nil
   end
 
   def select_piece_and_move(moves)
