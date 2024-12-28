@@ -433,27 +433,28 @@ describe Game do # rubocop:disable Metrics/BlockLength
       let(:piece) { BlackRook.new([1, 2], board) }
 
       before do
+        allow(getter).to receive(:puts)
         allow(getter).to receive(:gets).and_return('1,2')
         allow(getter).to receive(:valid_input).and_return(true)
       end
 
-      xit 'gets the piece for the move from user' do
+      it 'gets the piece for the move from user' do
         expect(getter).to receive(:gets).once
         getter.player_select_piece
       end
 
-      xit 'returns the correctly formatted output' do
+      it 'returns the correctly formatted output' do
         getter.board[1][2] = piece
-        expected_output = piece
+        expected_output = piece.pos
         expect(getter.player_select_piece).to eql(expected_output)
       end
 
-      xit 'calls valid_piece once' do
+      it 'calls valid_piece once' do
         expect(getter).to receive(:valid_input).once
         getter.player_select_piece
       end
 
-      xit 'calls player_select_piece once if valid_piece returns false' do
+      it 'calls player_select_piece once if valid_piece returns false' do
         allow(getter).to receive(:valid_input).and_return(false, true)
         expect(getter).to receive(:player_select_piece).once
         getter.player_select_piece
