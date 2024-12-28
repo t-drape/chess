@@ -15,7 +15,8 @@ class BlackPawn
 
   def moves
     moves = []
-    moves += @opener ? opening_moves : non_opening_moves
+    normal_moves = @opener ? opening_moves : non_opening_moves
+    moves += normal_moves
     moves += en_passant
     moves += capture_moves
     moves
