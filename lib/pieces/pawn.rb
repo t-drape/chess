@@ -15,8 +15,7 @@ class BlackPawn
 
   def moves
     moves = []
-    normal_moves = @opener ? opening_moves : non_opening_moves
-    moves += normal_moves
+    moves += @opener ? opening_moves : non_opening_moves
     moves += en_passant
     moves += capture_moves
     moves
@@ -28,7 +27,7 @@ class BlackPawn
       if @board[@pos[0] + vert_add][@pos[1]].nil?
         moves << [@pos[0] + vert_add, @pos[1]]
       elsif vert_add == 1
-        return nil
+        return []
       end
     end
     moves

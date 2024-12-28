@@ -194,7 +194,7 @@ class Game
 
   def update_board(piece, move)
     # Update Board
-    remove_capture_piece_from_player(move)
+    remove_capture_piece_from_player(piece, move)
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
@@ -202,10 +202,10 @@ class Game
     piece.pos = move
   end
 
-  def remove_capture_piece_from_player(move)
+  def remove_capture_piece_from_player(piece, move)
     piece = @board[move[0]][move[1]]
 
-    return if piece.nil?
+    return ep_capture(piece, move) if piece.nil?
 
     if @current_player == @player_one
       index = @player_two.pieces.index(piece)
@@ -214,6 +214,25 @@ class Game
       index = @player_one.pieces.index(piece)
       @player_one.pieces[index] = nil
     end
+  end
+
+  def ep_capture(piece, move)
+    if @current_player == @player_one
+      return unless piece == WhitePawn
+
+      if piece.last_move[:from_start] && move == [last_move[:piece].pos[0] - 1, last_move[:piece].pos[1]]
+        index = @player_two.pieces.index(last_move[:piece])
+        @player_two.pieces[index] = nil
+      end
+    else
+      return unless piece == BlackPawn
+
+      if piece.last_move[:from_start] && move == [last_move[:piece].pos[0] + 1, last_move[:piece].pos[1]]
+        index = @player_one.pieces.index(last_move[:piece])
+        @player_one.pieces[index] = nil
+      end
+    end
+    nil
   end
 
   def select_piece_and_move(moves)
@@ -331,8 +350,8 @@ class Game
   end
 end
 
-# x = Game.new
-# x.play_game
+x = Game.new
+x.play_game
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class
