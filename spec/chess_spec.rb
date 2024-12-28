@@ -57,8 +57,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#play_game' do
-    context 'when a game is started' do
+  describe '#play_game' do # rubocop:disable Metrics/BlockLength
+    context 'when a game is started' do # rubocop:disable Metrics/BlockLength
       subject(:game_on) { described_class.new }
 
       it 'calls start message once' do
@@ -309,8 +309,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#play_round' do
-    context 'when a round is started' do
+  describe '#play_round' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is started' do # rubocop:disable Metrics/BlockLength
       board = [[nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
                [nil, nil, nil, nil, nil, nil, nil, nil],
