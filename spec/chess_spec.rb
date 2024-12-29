@@ -555,15 +555,15 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  describe '#remove_capture_piece_from_player' do
-    context 'when a capture is made' do
+  describe '#remove_capture_piece_from_player' do # rubocop:disable Metrics/BlockLength
+    context 'when a capture is made' do # rubocop:disable Metrics/BlockLength
       subject(:captures) { described_class.new }
 
       it 'changes the value of the piece to nil in the pieces array for player two' do
         move = [3, 3]
         captures.board[3][3] = captures.instance_variable_get(:@player_two).pieces[6]
         captured = captures.instance_variable_get(:@player_two).pieces[6]
-        expect { captures.remove_capture_piece_from_player(move) }.to change {
+        expect { captures.remove_capture_piece_from_player(nil, move) }.to change {
           captures.instance_variable_get(:@player_two).pieces[6]
         }.from(captured).to(nil)
       end
@@ -573,14 +573,59 @@ describe Game do # rubocop:disable Metrics/BlockLength
         move = [6, 0]
         captures.board[6][0] = captures.instance_variable_get(:@player_one).pieces[0]
         captured = captures.instance_variable_get(:@player_one).pieces[0]
-        expect { captures.remove_capture_piece_from_player(move) }.to change {
+        expect { captures.remove_capture_piece_from_player(nil, move) }.to change {
           captures.instance_variable_get(:@player_one).pieces[0]
         }.from(captured).to(nil)
       end
 
+      it 'calls ep_capture if no piece is captured' do
+        move = [0, 3]
+        expect(captures).to receive(:ep_capture)
+        captures.remove_capture_piece_from_player(nil, move)
+      end
+
       it 'returns nil if no piece is captured' do
         move = [0, 3]
-        expect(captures.remove_capture_piece_from_player(move)).to eql(nil)
+        expect(captures.remove_capture_piece_from_player(nil, move)).to eql(nil)
+      end
+    end
+  end
+
+  describe '#ep_capture' do # rubocop:disable Metrics/BlockLength
+    context "when a pawn captures an opponent's pawn en passant" do # rubocop:disable Metrics/BlockLength
+      subject(:capture) { described_class.new }
+      let(:black_piece) { BlackPawn.new([0, 0], nil, { piece: nil, from_start: nil }) }
+      let(:white_piece) { WhitePawn.new([0, 0], nil, { piece: nil, from_start: nil }) }
+
+      it "removes the captured pawn from player one's pieces" do
+        piece = capture.instance_variable_get(:@player_two).pieces[0]
+        piece.pos = [3, 1]
+        white_piece.last_move[:piece] = piece
+        white_piece.last_move[:from_start] = true
+        move = [2, 1]
+        expect { capture.ep_capture(white_piece, move) }.to change {
+          capture.instance_variable_get(:@player_two).pieces[0]
+        }.from(piece).to(nil)
+      end
+
+      it "removes the captured pawn from player two's pieces" do
+        capture.change_player
+        piece = capture.instance_variable_get(:@player_one).pieces[0]
+        piece.pos = [4, 6]
+        black_piece.last_move[:piece] = piece
+        black_piece.last_move[:from_start] = true
+        move = [5, 6]
+        expect { capture.ep_capture(black_piece, move) }.to change {
+          capture.instance_variable_get(:@player_one).pieces[0]
+        }.from(piece).to(nil)
+      end
+
+      it 'returns nil if no en passant capture occurred' do
+        piece = capture.instance_variable_get(:@player_two).pieces[0]
+        white_piece.last_move[:piece] = piece
+        white_piece.last_move[:from_start] = false
+        move = [6, 6]
+        expect(capture.ep_capture(white_piece, move)).to eql(nil)
       end
     end
   end
