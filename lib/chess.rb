@@ -205,7 +205,8 @@ class Game
   def remove_capture_piece_from_player(new_piece, move)
     piece = @board[move[0]][move[1]]
 
-    return ep_capture(new_piece, move) if piece.nil?
+    return ep_capture(new_piece, move) if new_piece.is_a?(BlackPawn) || new_piece.is_a?(WhitePawn)
+    return if piece.nil?
 
     if @current_player == @player_one
       index = @player_two.pieces.index(piece)
@@ -217,22 +218,21 @@ class Game
   end
 
   def ep_capture(piece, move)
-    if @current_player == @player_one
-      return unless piece.is_a?(WhitePawn)
+    puts 'It worked!'
+    if @current_player == @player_one # && piece.is_a?(WhitePawn)
+      if piece.last_move[:from_start] # && move == [piece.last_move[:piece].pos[0] - 1,
+        # piece.last_move[:piece].pos[1]]
 
-      if piece.last_move[:from_start] && move == [piece.last_move[:piece].pos[0] - 1,
-                                                  piece.last_move[:piece].pos[1]]
+        # @player_two.pieces = @player_two.pieces.map { |e| e == piece.last_move[:piece] ? nil : e }
         index = @player_two.pieces.index(piece.last_move[:piece])
         @player_two.pieces[index] = nil
       end
-    else
-      return unless piece.is_a?(BlackPawn)
+    elsif piece.last_move[:from_start] # if piece.is_a?(BlackPawn)
+      index = @player_one.pieces.index(piece.last_move[:piece])
+      @player_one.pieces[index] = nil # && move == [piece.last_move[:piece].pos[0] + 1,
+      # piece.last_move[:piece].pos[1]]
 
-      if piece.last_move[:from_start] && move == [piece.last_move[:piece].pos[0] + 1,
-                                                  piece.last_move[:piece].pos[1]]
-        index = @player_one.pieces.index(piece.last_move[:piece])
-        @player_one.pieces[index] = nil
-      end
+      # @player_one.pieces = @player_one.pieces.map { |e| e == piece.last_move[:piece] ? nil : e }
     end
   end
 
