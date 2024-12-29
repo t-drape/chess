@@ -166,7 +166,6 @@ class Game
   # Move to pawn file in refactor
   def set_last_moves(piece, old_pos)
     on_start = false
-    puts old_pos[0]
     if @current_player == @player_one
       on_start = true if old_pos[0] == 6
     elsif old_pos[0] == 1
