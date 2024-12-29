@@ -194,7 +194,7 @@ class Game
 
   def update_board(piece, move)
     # Update Board
-    remove_capture_piece_from_player(piece, move)
+    remove_capture_piece_from_player(move)
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
@@ -202,10 +202,10 @@ class Game
     piece.pos = move
   end
 
-  def remove_capture_piece_from_player(new_piece, move)
+  def remove_capture_piece_from_player(move)
     piece = @board[move[0]][move[1]]
 
-    return ep_capture(new_piece, move) if new_piece.is_a?(BlackPawn) || new_piece.is_a?(WhitePawn)
+    # return ep_capture(new_piece, move) if new_piece.is_a?(BlackPawn) || new_piece.is_a?(WhitePawn)
     return if piece.nil?
 
     if @current_player == @player_one
@@ -351,8 +351,8 @@ class Game
   end
 end
 
-x = Game.new
-x.play_game
+# x = Game.new
+# x.play_game
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class
