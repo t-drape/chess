@@ -82,7 +82,7 @@ describe BlackPawn do # rubocop:disable Metrics/BlockLength
 
       it 'returns nil if the first move is blocked' do
         starting_square.board[2][3] = 12
-        expected_output = nil
+        expected_output = []
         expect(starting_square.opening_moves).to eql(expected_output)
       end
     end
