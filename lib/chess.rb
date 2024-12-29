@@ -143,12 +143,13 @@ class Game
     # Get piece and move from user
     available_moves = @current_player.legal_moves
     piece, move = select_piece_and_move(available_moves)
+    old_pos = piece.pos
     # Update Board
     # If current king is in check
     # old_board = @board
     # old_pos = piece.pos
-    set_last_moves(piece)
     update_board(piece, move)
+    set_last_moves(piece, old_pos)
     set_piece_boards
     check?
     change_player
@@ -163,15 +164,16 @@ class Game
   end
 
   # Move to pawn file in refactor
-  def set_last_moves(piece)
+  def set_last_moves(piece, old_pos)
     on_start = false
-    if piece.is_a?(WhitePawn)
-      on_start = true if piece.pos[0] == 6
-    elsif piece.is_a?(BlackPawn)
-      on_start = true if piece.pos[0] == 1
+    puts old_pos[0]
+    if @current_player == @player_one
+      on_start = true if old_pos[0] == 6
+    elsif old_pos[0] == 1
+      on_start = true
     end
-    @player_two.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
-    @player_one.pieces[0..7].each { |e| e.last_move = { piece: piece, from_start: on_start } unless e.nil? }
+    @player_two.pieces[0..7].each { |pawn| pawn.last_move = { piece: piece, from_start: on_start } unless pawn.nil? }
+    @player_one.pieces[0..7].each { |pawn| pawn.last_move = { piece: piece, from_start: on_start } unless pawn.nil? }
   end
 
   def check?
@@ -223,11 +225,13 @@ class Game
     if @current_player == @player_one
       if new_piece.last_move[:from_start] && move == ([new_piece.last_move[:piece].pos[0] - 1,
                                                        new_piece.last_move[:piece].pos[1]])
+        @board[new_piece.last_move[:piece].pos[0]][new_piece.last_move[:piece].pos[1]] = nil
         @player_two.pieces[@player_two.pieces.index(new_piece.last_move[:piece])] = nil
-
       end
     elsif new_piece.last_move[:from_start] && move == ([new_piece.last_move[:piece].pos[0] + 1,
                                                         new_piece.last_move[:piece].pos[1]])
+      @board[new_piece.last_move[:piece].pos[0]][new_piece.last_move[:piece].pos[1]] =
+        nil
       @player_one.pieces[@player_one.pieces.index(new_piece.last_move[:piece])] =
         nil
     end
@@ -366,8 +370,8 @@ class Game
   end
 end
 
-# x = Game.new
-# x.play_game
+x = Game.new
+x.play_game
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class

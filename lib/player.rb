@@ -21,7 +21,7 @@ class BlackPlayer
   def create_pawns
     pawns = []
     8.times do |t|
-      pawn = BlackPawn.new([1, t], @board, nil)
+      pawn = BlackPawn.new([1, t], @board, { piece: nil, from_start: nil })
       pawns << pawn
     end
     pawns
@@ -76,7 +76,7 @@ class WhitePlayer
   def create_pawns
     pawns = []
     8.times do |t|
-      pawn = WhitePawn.new([6, t], board, nil)
+      pawn = WhitePawn.new([6, t], board, { piece: nil, from_start: nil })
       pawns << pawn
     end
     pawns

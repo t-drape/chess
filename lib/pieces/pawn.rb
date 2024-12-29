@@ -14,8 +14,7 @@ class BlackPawn
   end
 
   def moves
-    moves = []
-    moves += @opener ? opening_moves : non_opening_moves
+    moves = normal_moves
     moves += en_passant
     moves += capture_moves
     moves
@@ -46,8 +45,11 @@ class BlackPawn
     moves
   end
 
-  def non_opening_moves
-    @board[@pos[0] + 1][@pos[1]].nil? ? [@pos[0] + 1, @pos[1]] : []
+  def normal_moves
+    moves = []
+    moves << [@pos[0] + 1, @pos[1]] if @board[@pos[0] + 1][@pos[1]].nil?
+    moves << [@pos[0] + 2, @pos[1]] if @pos[0] == 1 && !moves.empty? && @board[@pos[0] + 2][@pos[1]].nil?
+    moves
   end
 
   def en_passant_left
@@ -88,8 +90,7 @@ class WhitePawn
   end
 
   def moves
-    moves = []
-    moves += @opener ? opening_moves : non_opening_moves
+    moves = normal_moves
     moves += en_passant
     moves += capture_moves
     moves
@@ -120,8 +121,11 @@ class WhitePawn
     moves
   end
 
-  def non_opening_moves
-    @board[@pos[0] - 1][@pos[1]].nil? ? [@pos[0] - 1, @pos[1]] : []
+  def normal_moves
+    moves = []
+    moves << [@pos[0] - 1, @pos[1]] if @board[@pos[0] - 1][@pos[1]].nil?
+    moves << [@pos[0] - 2, @pos[1]] if @pos[0] == 6 && !moves.empty? && @board[@pos[0] - 2][@pos[1]].nil?
+    moves
   end
 
   def en_passant_left
