@@ -185,6 +185,8 @@ class Game
     set_last_moves(piece, old_pos)
     set_piece_boards
     check?
+    pawn_change_black
+    pawn_change_white
     change_player
     # Move must get King out of check, or keep King out of check
 
@@ -406,8 +408,9 @@ class Game
       new_piece = BlackQueen.new([index[0], index[1]], @board)
     end
     change_index = @player_two.pieces.index(@board[index[0]][index[1]])
-    @player_two.pieces[change_index] = new_piece
+    @player_two.pieces[change_index] = nil
     @board[index[0]][index[1]] = new_piece
+    @player_two.pieces << new_piece
   end
 
   def create_new_piece_white(piece, index)
@@ -423,8 +426,9 @@ class Game
       new_piece = WhiteQueen.new([index[0], index[1]], @board)
     end
     change_index = @player_one.pieces.index(@board[index[0]][index[1]])
-    @player_one.pieces[change_index] = new_piece
+    @player_one.pieces[change_index] = nil
     @board[index[0]][index[1]] = new_piece
+    @player_two.pieces << new_piece
   end
 end
 
