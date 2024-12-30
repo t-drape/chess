@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'yaml'
+
 require_relative('./../lib/pieces/rook')
 require_relative('./../lib/pieces/pawn')
 require_relative('./../lib/pieces/bishop')
@@ -5,8 +9,9 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 require_relative('./player')
 
+# A model for the game of Chess
 class Game
-  attr_accessor :board, :current_player
+  attr_accessor :board, :current_player, :new_game
 
   def initialize
     @winner = nil
@@ -21,6 +26,8 @@ class Game
     @player_one = WhitePlayer.new(@board)
     @player_two = BlackPlayer.new(@board)
     @current_player = @player_one
+    @new_game = true
+    @game_id = 0
   end
 
   def show_board
@@ -32,12 +39,37 @@ class Game
     end
   end
 
-  def play_game
+  def start_new_game
     start_message
     set_board
     set_piece_boards
-    play_round until end_game_check
-    end_message(@winner)
+  end
+
+  def play_game
+    start_new_game if @new_game
+    game_over = false
+    until game_over == true
+      game_over = end_game_check
+      play_round
+      game_over = game_over ? end_message(@winner) : pause_game
+    end
+    # end_message(@winner)
+  end
+
+  def write_file
+    File.open("./chess_games/game_#{@game_id}.yaml", 'w') do |file|
+      file.puts YAML.dump(self)
+    end
+  end
+
+  def dump_data
+    Dir.mkdir('./chess_games') unless Dir.exist?('./chess_games')
+    unless @new_game == false
+
+      @new_game = false
+      @game_id += 1 while Dir.children('./chess_games').include?("game_#{@game_id}.yaml")
+    end
+    write_file
   end
 
   def end_message(player)
@@ -46,6 +78,7 @@ class Game
     else
       puts "#{player.color.capitalize} Player wins!"
     end
+    true
   end
 
   def set_board
@@ -161,6 +194,24 @@ class Game
     # Check if move initiated check
     # check_message if @current_player == @player_one ? @player_two.king.in_check? : @player_one.king_in_check?
     # Update last move of each pawn
+  end
+
+  def stop_playing
+    choices = %w[y n]
+    puts 'Do you wish to stop the game? [Y/N]'
+    answer = gets.chomp.downcase
+    answer = gets.chomp.downcase unless choices.include?(answer)
+    answer == choices[0]
+  end
+
+  def pause_game
+    choice = stop_playing
+    if choice
+      puts 'Game Paused!'
+      dump_data
+      return true
+    end
+    false
   end
 
   # Move to pawn file in refactor
@@ -368,9 +419,6 @@ class Game
     end
   end
 end
-
-x = Game.new
-x.play_game
 
 # Food for thought in refactor
 # Make a board class and move all updating function to that class
