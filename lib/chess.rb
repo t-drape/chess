@@ -9,7 +9,6 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 require_relative('./player')
 
-# Fix bug to allow change in piece if no available moves!!!!
 # A model for the game of Chess
 class Game
   attr_accessor :board, :current_player, :new_game
@@ -253,8 +252,34 @@ class Game
     @board[move[0]][move[1]] = piece
     # Reset Board at piece pos to nil
     @board[piece.pos[0]][piece.pos[1]] = nil
+    update_black_castle?(piece, move) if piece.is_a?(BlackKing)
+    update_white_castle?(piece, move) if piece.is_a?(WhiteKing)
     # Update Piece Pos
     piece.pos = move
+  end
+
+  def update_white_castle?(piece, move)
+    return unless piece.on_opening
+
+    if move == [7, 6]
+      @board[7][5] = @board[7][7]
+      @board[7][7] = nil
+    elsif move == [7, 1]
+      @board[7][2] = @board[7][0]
+      @board[7][0] = nil
+    end
+  end
+
+  def update_black_castle?(piece, move)
+    return unless piece.on_opening
+
+    if move == [0, 6]
+      @board[0][5] = @board[0][7]
+      @board[0][7] = nil
+    elsif move == [0, 1]
+      @board[0][2] = @board[0][0]
+      @board[0][0] = nil
+    end
   end
 
   def remove_capture_piece_from_player(new_piece, move)

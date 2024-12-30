@@ -77,27 +77,7 @@ board: &1
     - 7
     board: *1
     on_opening: true
-- - &18 !ruby/object:BlackPawn
-    code: "♟"
-    color: black
-    pos:
-    - 1
-    - 0
-    opener: true
-    board: *1
-    last_move:
-      :piece: &2 !ruby/object:WhitePawn
-        code: "♙"
-        color: white
-        pos:
-        - 4
-        - 0
-        opener: true
-        board: *1
-        last_move:
-          :piece: *2
-          :from_start: true
-      :from_start: true
+- -
   - &19 !ruby/object:BlackPawn
     code: "♟"
     color: black
@@ -107,7 +87,17 @@ board: &1
     opener: true
     board: *1
     last_move:
-      :piece: *2
+      :piece: &2 !ruby/object:WhitePawn
+        code: "♙"
+        color: white
+        pos:
+        - 5
+        - 7
+        opener: true
+        board: *1
+        last_move:
+          :piece: *2
+          :from_start: true
       :from_start: true
   - &20 !ruby/object:BlackPawn
     code: "♟"
@@ -183,6 +173,42 @@ board: &1
   -
   -
   -
+- - &18 !ruby/object:BlackPawn
+    code: "♟"
+    color: black
+    pos:
+    - 3
+    - 0
+    opener: true
+    board: *1
+    last_move:
+      :piece: *2
+      :from_start: true
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- - &3 !ruby/object:WhitePawn
+    code: "♙"
+    color: white
+    pos:
+    - 4
+    - 0
+    opener: true
+    board: *1
+    last_move:
+      :piece: *2
+      :from_start: true
+  -
+  -
+  -
+  -
+  -
+  -
+  -
 - -
   -
   -
@@ -190,25 +216,9 @@ board: &1
   -
   -
   -
-  -
-- - *2
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - *2
 - -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-- -
-  - &3 !ruby/object:WhitePawn
+  - &4 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
@@ -219,7 +229,7 @@ board: &1
     last_move:
       :piece: *2
       :from_start: true
-  - &4 !ruby/object:WhitePawn
+  - &5 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
@@ -230,7 +240,7 @@ board: &1
     last_move:
       :piece: *2
       :from_start: true
-  - &5 !ruby/object:WhitePawn
+  - &6 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
@@ -241,7 +251,7 @@ board: &1
     last_move:
       :piece: *2
       :from_start: true
-  - &6 !ruby/object:WhitePawn
+  - &7 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
@@ -252,7 +262,7 @@ board: &1
     last_move:
       :piece: *2
       :from_start: true
-  - &7 !ruby/object:WhitePawn
+  - &8 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
@@ -263,28 +273,18 @@ board: &1
     last_move:
       :piece: *2
       :from_start: true
-  - &8 !ruby/object:WhitePawn
-    code: "♙"
-    color: white
-    pos:
-    - 6
-    - 6
-    opener: true
-    board: *1
-    last_move:
-      :piece: *2
-      :from_start: true
   - &9 !ruby/object:WhitePawn
     code: "♙"
     color: white
     pos:
     - 6
-    - 7
+    - 6
     opener: true
     board: *1
     last_move:
       :piece: *2
       :from_start: true
+  -
 - - &10 !ruby/object:WhiteRook
     code: "♖"
     color: white
@@ -365,7 +365,6 @@ player_one: !ruby/object:WhitePlayer
   color: white
   board: *1
   pawns:
-  - *2
   - *3
   - *4
   - *5
@@ -373,6 +372,7 @@ player_one: !ruby/object:WhitePlayer
   - *7
   - *8
   - *9
+  - *2
   non_pawns:
   - *10
   - *11
@@ -383,7 +383,6 @@ player_one: !ruby/object:WhitePlayer
   - *16
   - *17
   pieces:
-  - *2
   - *3
   - *4
   - *5
@@ -391,6 +390,7 @@ player_one: !ruby/object:WhitePlayer
   - *7
   - *8
   - *9
+  - *2
   - *10
   - *11
   - *12

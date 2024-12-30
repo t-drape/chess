@@ -15,7 +15,7 @@ class BlackKing
     @color = 'black'
     @pos = pos
     @board = board
-    @on_opening = true
+    @on_opening = @pos == [0, 4]
     @movements = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
   end
 
@@ -219,7 +219,7 @@ class WhiteKing
     @color = 'white'
     @pos = pos
     @board = board
-    @on_opening = true
+    @on_opening = @pos == [7, 4]
     @movements = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
   end
 
