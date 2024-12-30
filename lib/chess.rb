@@ -256,6 +256,7 @@ class Game
     update_white_castle?(piece, move) if piece.is_a?(WhiteKing)
     # Update Piece Pos
     piece.pos = move
+    piece.on_opening = false
   end
 
   def update_white_castle?(piece, move)

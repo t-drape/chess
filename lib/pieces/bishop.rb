@@ -6,13 +6,14 @@ require_relative('./../modules/bishop_moves')
 class BlackBishop
   include BlackBishopMovement
 
-  attr_accessor :color, :board, :pos, :code
+  attr_accessor :color, :board, :pos, :code, :on_opening
 
   def initialize(pos, board)
     @code = "\u{265D}"
     @color = 'black'
     @pos = pos
     @board = board
+    @on_opening = true
   end
 
   def moves
@@ -24,13 +25,14 @@ end
 class WhiteBishop
   include WhiteBishopMovement
 
-  attr_accessor :color, :board, :pos, :code
+  attr_accessor :color, :board, :pos, :code, :on_opening
 
   def initialize(pos, board)
     @code = "\u{2657}"
     @color = 'white'
     @pos = pos
     @board = board
+    @on_opening = true
   end
 
   def moves

@@ -2,13 +2,14 @@
 
 # A class to model a black pawn in chess
 class BlackPawn
-  attr_accessor :color, :board, :opener, :pos, :last_move, :code
+  attr_accessor :color, :board, :opener, :pos, :last_move, :code, :on_opening
 
   def initialize(pos, board, last_move)
     @code = "\u{265F}"
     @color = 'black'
     @pos = pos
     @opener = @pos[0] == 1
+    @on_opening = true
     @board = board
     @last_move = last_move
   end
@@ -78,13 +79,14 @@ end
 
 # A class to model a white pawn in chess
 class WhitePawn
-  attr_accessor :color, :board, :opener, :pos, :last_move, :code
+  attr_accessor :color, :board, :opener, :pos, :last_move, :code, :on_opening
 
   def initialize(pos, board, last_move)
     @code = "\u{2659}"
     @color = 'white'
     @pos = pos
     @opener = @pos[0] == 6
+    @on_opening = true
     @board = board
     @last_move = last_move
   end
