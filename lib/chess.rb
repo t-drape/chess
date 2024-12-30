@@ -9,6 +9,7 @@ require_relative('./../lib/pieces/knight')
 require_relative('./../lib/pieces/queen')
 require_relative('./player')
 
+# Fix bug to allow change in piece if no available moves!!!!
 # A model for the game of Chess
 class Game
   attr_accessor :board, :current_player, :new_game
